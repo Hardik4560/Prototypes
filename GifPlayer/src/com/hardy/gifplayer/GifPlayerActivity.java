@@ -11,28 +11,22 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hardy.gifdecoder.GifDecoderView;
 
-public class MainActivity extends Activity implements PropertyChangeListener {
+public class GifPlayerActivity extends Activity implements PropertyChangeListener {
 
     Context mActivityContext;
 
@@ -52,7 +46,7 @@ public class MainActivity extends Activity implements PropertyChangeListener {
 
             @Override
             public void onClick(View v) {
-                new ShowGifAnimation(MainActivity.this, R.raw.kiss).execute();
+                new ShowGifAnimation(GifPlayerActivity.this, R.raw.kiss).execute();
             }
         });
 
@@ -72,14 +66,13 @@ public class MainActivity extends Activity implements PropertyChangeListener {
      */
     static class ShowGifAnimation extends AsyncTask<Void, Void, Void> {
 
-        private WeakReference<MainActivity> mContext;
-        private ProgressBar pb;
+        private WeakReference<GifPlayerActivity> mContext;
         private Dialog dialogProgress;
         private InputStream stream;
 
-        public ShowGifAnimation(MainActivity mainActivity, int giftResource) {
+        public ShowGifAnimation(GifPlayerActivity mainActivity, int giftResource) {
 
-            mContext = new WeakReference<MainActivity>(mainActivity);
+            mContext = new WeakReference<GifPlayerActivity>(mainActivity);
 
             dialogProgress = new Dialog(mContext.get(), android.R.style.Theme_Translucent);
             dialogProgress.setCancelable(false);
@@ -152,7 +145,7 @@ public class MainActivity extends Activity implements PropertyChangeListener {
      * is completed i.e., from the firePropertyChanged mehtod
      * @author Hardik
      */
-    private void postGiftReceived() {
+    private void postGifAnimation() {
 
         if (gifDialog != null && gifDialog.isShowing()) {
             //TODO: Do something when gif animation is completed.
@@ -166,12 +159,7 @@ public class MainActivity extends Activity implements PropertyChangeListener {
 
         if (propertyName.equals(GifDecoderView.ANIMATION_COMPLETED)) {
             gdView.removePropertyChangeListener(this);
-            postGiftReceived();
+            postGifAnimation();
         }
     }
-
-    class VD extends Vector<String> {
-
-    }
-
 }
