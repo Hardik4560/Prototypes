@@ -8,22 +8,31 @@ import java.io.InputStream;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class GifDecoderView extends ImageView {
 
     private GifDecoder mGifDecoder;
-    private Context mContext;
     private boolean isAnimationCompleted;
-    private boolean isGiftSendAnimation;
 
     public final static String ANIMATION_COMPLETED = "animationCompleted";
 
     private Bitmap mTmpBitmap;
 
-    public GifDecoderView(Context context, InputStream stream) {
+    private int mRepeatCount;
+
+    /**
+     * Create a view that will play the gif animation.
+     * @param context - The activity context
+     * @param stream - The input stream to be played
+     * @param repeatCount - Number of time the input stream should be played. If -1 is supplied, it will be played forever. 
+     * @author Hardik
+     */
+    public GifDecoderView(Context context, InputStream stream, int repeatCount) {
         super(context);
-        mContext = context;
+        this.mRepeatCount = repeatCount;
+
         mGifDecoder = new GifDecoder();
         mGifDecoder.read(stream);
     }
@@ -31,7 +40,6 @@ public class GifDecoderView extends ImageView {
     public void playGif(InputStream stream, boolean isGiftSendAnimation) {
 
         isAnimationCompleted = false;
-        this.isGiftSendAnimation = isGiftSendAnimation;
         new StartAnimation().execute((Void[]) null);
     }
 
@@ -61,17 +69,25 @@ public class GifDecoderView extends ImageView {
 
         @Override
         protected Void doInBackground(Void... params) {
-            for (int i = 0; i < n; i++) {
-                mTmpBitmap = mGifDecoder.getFrame(i);
-                final int t = mGifDecoder.getDelay(i);
-                publishProgress(i);
-                try {
-                    Thread.sleep(t);
+            Log.d("Gif", "RepeatCount = " + mRepeatCount);
+            do {
+                for (int i = 0; i < n; i++) {
+                    mTmpBitmap = mGifDecoder.getFrame(i);
+                    final int t = mGifDecoder.getDelay(i);
+                    publishProgress(i);
+                    try {
+                        Thread.sleep(t);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
+                
+                if (mRepeatCount != -1) {
+                    mRepeatCount--;
                 }
-            }
+            } while (mRepeatCount > 0 || mRepeatCount == -1);
+
             return null;
         }
 
@@ -82,9 +98,8 @@ public class GifDecoderView extends ImageView {
             if (mTmpBitmap != null && !mTmpBitmap.isRecycled()) {
                 GifDecoderView.this.setImageBitmap(mTmpBitmap);
             }
-            if (values[0] == (n - 1) && isGiftSendAnimation) {
-
-                //TODO: Do something over here to notify user about animation being preparing
+            if (values[0] == (n - 1)) {
+                //TODO: Do something over here to notify about animation being preparing
             }
         }
 

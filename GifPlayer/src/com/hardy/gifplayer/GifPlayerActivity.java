@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hardy.gifdecoder.GifDecoderView;
+import com.hardy.view.GifPlayer;
 
 public class GifPlayerActivity extends Activity implements PropertyChangeListener {
 
@@ -35,6 +37,10 @@ public class GifPlayerActivity extends Activity implements PropertyChangeListene
 
     private static Dialog gifDialog;
     private static LinearLayout giftLayout;
+
+    private GifPlayer gifPlayerView;
+
+    Drawable mDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,8 @@ public class GifPlayerActivity extends Activity implements PropertyChangeListene
             }
         });
 
+        mDrawable = getResources().getDrawable(R.drawable.ic_launcher);
+        gifPlayerView = (GifPlayer) findViewById(R.id.gifPlayer1);
         mActivityContext = this;
     }
 
@@ -107,7 +115,7 @@ public class GifPlayerActivity extends Activity implements PropertyChangeListene
 
         protected Void doInBackground(Void... params) {
             //Initial loading The gif animation.
-            gdView = new GifDecoderView(mContext.get().mActivityContext, stream);
+            gdView = new GifDecoderView(mContext.get().mActivityContext, stream, 5);
             return null;
         }
 

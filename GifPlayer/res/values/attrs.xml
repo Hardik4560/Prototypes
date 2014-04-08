@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="GifPlayer">
+        <attr name="src" format="string"></attr>
+        <attr name="repeatCount" format="integer"></attr>
+    </declare-styleable>
+
+</resources>
