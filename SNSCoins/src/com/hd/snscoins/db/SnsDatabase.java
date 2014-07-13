@@ -1,71 +1,55 @@
 
 package com.hd.snscoins.db;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.hd.snscoins.logger.Logger;
-import com.j256.ormlite.support.ConnectionSource;
-import com.neebal.android.core.model.Model;
-import com.neebal.android.core.model.db.CustomSqliteOpenHelper;
+import com.hardy.exceptions.ObjectNotInitializedException;
+import com.hd.snscoins.core.DaoMaster;
+import com.hd.snscoins.core.DaoMaster.DevOpenHelper;
+import com.hd.snscoins.core.DaoSession;
 
-public class SnsDatabase extends CustomSqliteOpenHelper {
+public class SnsDatabase {
+    private static final String DATABASE_NAME = "sns.sqlite";
+    private static SnsDatabase database;
 
-    public static final String DATABASE_NAME = "UpDatabase.sqlite";
-    public static final int DB_VERSION = 1;
+    private static DaoSession daoSession;
+    private static SQLiteDatabase db;
 
-    private static final String TAG = SnsDatabase.class.getSimpleName();
+    public static final String TABLE_COIN = "coin";
+    public static final String TABLE_COIN_TYPE = "coin_type";
+    public static final String TABLE_COIN_SUB_TYPE = "coin_sub_type";
 
-    private static List<Class> classTableList;
+    private SnsDatabase(Context context) {
+        DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DATABASE_NAME, null);
 
-    public SnsDatabase(Context context) {
-        super(context, DATABASE_NAME, null, DB_VERSION);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
 
-        classTableList = new ArrayList<Class>();
+        SnsDatabase.db = db;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase arg0, ConnectionSource arg1) {
-        try {
-            for (Iterator<Class> iterator = classTableList.iterator(); iterator.hasNext();) {
-                Class classToCreate = iterator.next();
-                Model.create(classToCreate);
-            }
+    public synchronized static SnsDatabase initialize(Context context) {
+        if (database != null) {
+            throw new RuntimeException("Multiple calls to initialize(...)");
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        database = new SnsDatabase(context);
+        return database;
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase arg0, ConnectionSource arg1, int arg2,
-            int arg3) {}
-
-    /**
-     * 
-     * @author Hardik Shah
-     */
-    public static void resetDatabase() {
-        Logger.d(TAG, "Clearing the tables");
-
-        try {
-            for (Iterator<Class> iterator = classTableList.iterator(); iterator.hasNext();) {
-                Class classToDrop = iterator.next();
-                Model.drop(classToDrop);
-            }
-
-            for (Iterator<Class> iterator = classTableList.iterator(); iterator.hasNext();) {
-                Class classToCreate = iterator.next();
-                Model.create(classToCreate);
-            }
+    public synchronized static DaoSession session() {
+        if (database == null || daoSession == null) {
+            throw new ObjectNotInitializedException(SnsDatabase.class);
         }
-        catch (SQLException e) {
-            e.printStackTrace();
+        return daoSession;
+    }
+
+    public synchronized static SQLiteDatabase db() {
+        if (database == null || db == null) {
+            throw new ObjectNotInitializedException(SnsDatabase.class);
         }
+        return db;
     }
 }

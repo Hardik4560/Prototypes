@@ -10,9 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import com.hd.snscoins.R.id;
 import com.hd.snscoins.R.layout;
 
 public final class HomeScreenActivity_
@@ -31,21 +29,6 @@ public final class HomeScreenActivity_
     }
 
     private void afterSetContentView_() {
-        {
-            View view = findViewById(id.btnCoins);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        HomeScreenActivity_.this.onCoinsClick();
-                    }
-
-                }
-                );
-            }
-        }
     }
 
     @Override

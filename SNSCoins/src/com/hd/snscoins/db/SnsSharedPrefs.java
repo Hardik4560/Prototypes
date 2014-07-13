@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.hd.snscoins.logger.Logger;
+import com.hardy.logging.Logger;
 
 public class SnsSharedPrefs {
 
