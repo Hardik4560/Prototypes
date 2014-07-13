@@ -1,0 +1,8 @@
+Copper / Nickle 		> 1
+Silver 					> 1
+
+Commoditive				> 2
+Definative				> 2
+
+Proof Sets				> 3
+UNC Sets				> 3
