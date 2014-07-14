@@ -32,6 +32,7 @@ public class SnsCoinsGenerator {
 
         //Relation of subtype and type.
         Entity sub_type = schema.addEntity("CoinSubType");
+        sub_type.implementsSerializable();
         sub_type.setTableName(SnsDatabase.TABLE_COIN_SUB_TYPE); // "ORDER" is a reserved keyword
         sub_type.addIdProperty();
         sub_type.addStringProperty("type");
