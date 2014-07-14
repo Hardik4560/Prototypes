@@ -1,4 +1,4 @@
-Copper / Nickle 		> 1
+Copper/Nickle	 		> 1
 Silver 					> 1
 
 Commoditive				> 2

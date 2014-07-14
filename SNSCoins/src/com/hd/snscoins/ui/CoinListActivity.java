@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
-import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Loader;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,17 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.hardy.logging.Logger;
 import com.hd.snscoins.R;
+import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Coin;
-import com.hd.snscoins.db.SimpleCursorLoader;
-import com.hd.snscoins.db.SnsDatabase;
+import com.hd.snscoins.core.CoinSubType;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -37,6 +32,21 @@ public class CoinListActivity extends ListActivity {
 
     public static final String TAG = CoinListActivity.class.getSimpleName();
     private CoinAdapter adapterCoin;
+
+    CoinSubType subType;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+
+        }
+        else {
+            subType = ((SnSCoreSystem) getApplicationContext()).getTransientSubType();
+            ((SnSCoreSystem) getApplicationContext()).setTransientSubType(null);
+        }
+    }
 
     @AfterViews
     protected void init() {
@@ -142,10 +152,15 @@ public class CoinListActivity extends ListActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Cursor cursor = null;
+            /*Cursor cursor = null;
+            //Get the selected subType.
+            String[] projectionSubType = new String[] { "_id", "TYPE" };
+            String whereSubType = "TYPE = " + subType;
+            Cursor cursorSubType = SnsDatabase.db().query(SnsDatabase.TABLE_COIN_SUB_TYPE, projectionSubType, whereSubType, null, null, null, null);
 
+            //Get the selected subType id and use it to get all the coins.
             String[] projection = new String[] { "_id", "NAME", "ICON_LOCATION" };
-            String where = "id_sub_type = 1";
+            String where = "id_sub_type = " + cursorSubType.getLong(cursorSubType.getColumnIndex("_id"));
 
             cursor = SnsDatabase.db().query(SnsDatabase.TABLE_COIN, projection, where, null, null, null, null);
 
@@ -163,7 +178,8 @@ public class CoinListActivity extends ListActivity {
 
                 } while (cursor.moveToNext());
             }
-
+            */
+            coins = subType.getCoinList();
             return null;
         }
 

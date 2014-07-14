@@ -21,3 +21,53 @@ HALF RUPEE 1835-1945 			> 1 > 2
 SOVEREIGN 1918 					> 1 > 2
 ONE MOHUR 1835-1892 			> 1 > 2
 TWO MOHUR 1835 					> 1 > 2
+
+
+5 Paise 1976 - 1979 			> 2 > 3
+10 Paise 1974 - 1982 			> 2 > 3
+20 Paise 1969 - 1983 			> 2 > 3
+25 Paise 1980 - 1985 			> 2 > 3
+50 Paise 1964 - 1997 			> 2 > 3
+1 Rupee 1964 - 2010 			> 2 > 3
+2 Rupees 1982 - 2010 			> 2 > 3
+5 Rupees 1984 - 2014 			> 2 > 3
+10 Rupees 1969 - 2013 			> 2 > 3
+
+
+HALF ANNA 1950 - 1955 			> 2 > 4
+ONE ANNA 1950 - 1954 			> 2 > 4
+TWO ANNAS 1950 - 1955 			> 2 > 4
+1 PICE 1950 - 1955	 			> 2 > 4
+1 NAYA PAISA 1957 - 1964		> 2 > 4
+1 PAISA 1965 - 1972	 			> 2 > 4
+2 NAYE PAISE 1957 - 1964		> 2 > 4
+2 PAISE 1965 - 1979	 			> 2 > 4
+3 PAISE 1964 - 1971	 			> 2 > 4
+5 NAYE PAISE 1957 - 1966		> 2 > 2
+10 PAISE 1964-1998	 			> 2 > 4
+5 PAISE 1964-1994	 			> 2 > 4
+10 NAYE PAISE 1957-1963 		> 2 > 4
+20 PAISE 1968-1997	 			> 2 > 4
+25 NAYE PAISE 1957-1963 		> 2 > 4
+
+
+1950 - REGULAR ISSUE							> 3 > 5
+1954 - REGULAR ISSUE							> 3 > 5
+1962 - REGULAR ISSUE							> 3 > 5
+1964 - JAWAHARLAL NEHRU (1889 - 1964)			> 3 > 5
+1967 - REGULAR ISSUE							> 3 > 5
+1969 - GANDHI CENTENARY (1869 - 1948)			> 3 > 5
+1970 - FOOD FOR ALL								> 3 > 5
+1971 - FOOD FOR ALL								> 3 > 5
+1972 - 25th ANNIVERSARY OF INDEPENDENCE			> 3 > 5
+1973 - GROW MORE FOOD							> 3 > 5
+1974 - PLANNED FAMILIES - FOOD FOR ALL			> 3 > 5
+1975 - EQUALITY,DEVELOPMENT, PEACE				> 3 > 5
+1976 - FOOD & WORK FOR ALL						> 3 > 5
+1977 - SAVE FOR DEVELOPMENT						> 3 > 5
+1978 - FOOD & SHELTER FOR ALL					> 3 > 5
+
+Demo											> 3 > 6
+
+
+

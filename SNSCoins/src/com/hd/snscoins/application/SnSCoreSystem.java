@@ -8,6 +8,7 @@ import com.googlecode.androidannotations.annotations.EApplication;
 import com.hardy.logging.Logger;
 import com.hardy.utils.SharedPrefs;
 import com.hardy.utils.ToastMaker;
+import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.fixtures.SnsFixtureDataCreator;
 import com.hd.snscoins.utils.SnsBuildConfiguration;
@@ -27,6 +28,8 @@ public class SnSCoreSystem extends Application {
     @Bean
     SnsFixtureDataCreator fixtureDataCreator;
 
+    private CoinSubType transientSubType;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,5 +47,13 @@ public class SnSCoreSystem extends Application {
         if (!(Boolean) SharedPrefs.getInstance().get(DATABASE_INITIALIZED, false)) {
             fixtureDataCreator.createFixtureData(this);
         }
+    }
+
+    public void setTransientSubType(CoinSubType transientSubType) {
+        this.transientSubType = transientSubType;
+    }
+
+    public CoinSubType getTransientSubType() {
+        return this.transientSubType;
     }
 }

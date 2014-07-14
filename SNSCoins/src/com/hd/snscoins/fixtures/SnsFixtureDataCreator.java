@@ -45,7 +45,7 @@ public class SnsFixtureDataCreator {
 
         Long coinTypeCount = 1L;
         Long coinSubTypeCount = 1L;
-        Long coinCount = 0L;
+        Long coinCount = 1L;
 
         //Save the coinType in the database.
         for (int i = 0; i < coinTypeNames.size(); i++) {
@@ -59,9 +59,11 @@ public class SnsFixtureDataCreator {
 
         //Save the coinSubType in the database.
         for (int i = 0; i < coinSubTypeNames.size(); i++) {
-            String coinSubTypeName = coinSubTypeNames.get(i).trim();
+            String[] names = coinSubTypeNames.get(i).split(">");
+            String coinSubTypeName = names[0].trim();
+            Long coinTypeId = Long.valueOf(names[1].trim());
 
-            CoinSubType coinSubType = new CoinSubType(coinSubTypeCount++, coinSubTypeName, 1);
+            CoinSubType coinSubType = new CoinSubType(coinSubTypeCount, coinSubTypeName, coinTypeId);
             SnsDatabase.session().getCoinSubTypeDao().insert(coinSubType);
 
             coinSubTypeCount++;
