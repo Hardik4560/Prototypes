@@ -58,7 +58,7 @@ public class HomeScreenActivity extends Activity {
 
     private class SyncCallLoader extends AsyncTask<Void, Void, Boolean> {
         private ProgressDialog progressDialog;
-        private static final String API_URL = "http://www.mocky.io/v2/53c6ce3d1fe368eb184a6117";
+        private static final String API_URL = "http://www.mocky.io/v2/53c6e0c81fe368bf1a4a611e";
 
         public SyncCallLoader(Context context) {
             progressDialog = new ProgressDialog(context);
@@ -86,32 +86,44 @@ public class HomeScreenActivity extends Activity {
                 Gson gson = new Gson();
                 WeSyncData syncData = gson.fromJson(response.toString(), WeSyncData.class);
 
-                //Persist in the database
-                //Save the CoinType
-                for (int i = 0; i < syncData.getCategory().size(); i++) {
-                    WeCategory weCategory = syncData.getCategory().get(i);
+                try {
+                    SnsDatabase.db().beginTransaction();
+                    //Persist in the database
+                    //Save the CoinType
+                    for (int i = 0; i < syncData.getCategory().size(); i++) {
+                        WeCategory weCategory = syncData.getCategory().get(i);
 
-                    CoinType coinType = new CoinType(weCategory.getId(), weCategory.getProduct_title());
-                    SnsDatabase.session().getCoinTypeDao().insert(coinType);
+                        CoinType coinType = new CoinType(weCategory.getId(), weCategory.getProduct_title());
+                        SnsDatabase.session().getCoinTypeDao().insert(coinType);
+                    }
+
+                    //Save the coinSubType in the database.
+                    for (int i = 0; i < syncData.getSub_category().size(); i++) {
+                        WeSubCategory weSubCategory = syncData.getSub_category().get(i);
+
+                        CoinSubType coinSubType = new CoinSubType(weSubCategory.getId(), weSubCategory.getProduct_title(), weSubCategory.getP_id());
+                        SnsDatabase.session().getCoinSubTypeDao().insert(coinSubType);
+                    }
+
+                    //Create some coins
+                    for (int i = 0; i < syncData.getProducts().size(); i++) {
+                        WeProduct weProduct = syncData.getProducts().get(i);
+
+                        Coin coin = new Coin(weProduct.getId(), weProduct.getProduct_title(), "", weProduct.getId_sub_category());
+                        SnsDatabase.session().getCoinDao().insert(coin);
+                    }
+
+                    SharedPrefs.getInstance().add(SnsConstants.DATA_SYNCED, true);
+                    SnsDatabase.db().setTransactionSuccessful();
                 }
-
-                //Save the coinSubType in the database.
-                for (int i = 0; i < syncData.getSub_category().size(); i++) {
-                    WeSubCategory weSubCategory = syncData.getSub_category().get(i);
-
-                    CoinSubType coinSubType = new CoinSubType(weSubCategory.getId(), weSubCategory.getProduct_title(), weSubCategory.getP_id());
-                    SnsDatabase.session().getCoinSubTypeDao().insert(coinSubType);
+                catch (Exception e) {
+                    e.printStackTrace();
+                    // exception handling
+                    success = false;
                 }
-
-                //Create some coins
-                for (int i = 0; i < syncData.getProducts().size(); i++) {
-                    WeProduct weProduct = syncData.getProducts().get(i);
-
-                    Coin coin = new Coin(weProduct.getId(), weProduct.getProduct_title(), "", weProduct.getId_sub_category());
-                    SnsDatabase.session().getCoinDao().insert(coin);
+                finally {
+                    SnsDatabase.db().endTransaction();
                 }
-
-                SharedPrefs.getInstance().add(SnsConstants.DATA_SYNCED, true);
             }
             catch (InterruptedException e) {
                 // exception handling
