@@ -1,0 +1,137 @@
+{
+  "category": [
+    {
+      "id": "1",
+      "product_title": "British India coins",
+      "image": "no-image.png"
+    },
+    {
+      "id": "2",
+      "product_title": "Republic",
+      "image": "no-image.png"
+    },
+    {
+      "id": "3",
+      "product_title": "Uncirculated Sets",
+      "image": "no-image.png"
+    }
+  ],
+  "sub_category": [
+    {
+      "p_id": "1",
+      "id": "001",
+      "product_title": "Copper / Nickle",
+      "image": "no-image.png"
+    },
+    {
+      "p_id": "1",
+      "id": "002",
+      "product_title": "Silver",
+      "image": "no-image.png"
+    },
+    {
+      "p_id": "2",
+      "id": "003",
+      "product_title": "Commoditive",
+      "image": "no-image.png"
+    },
+    {
+      "p_id": "2",
+      "id": "004",
+      "product_title": "Definitive",
+      "image": "no-image.png"
+    },
+    {
+      "p_id": "3",
+      "id": "005",
+      "product_title": "Proof Sets",
+      "image": "no-image.png"
+    },
+    {
+      "p_id": "3",
+      "id": "006",
+      "product_title": "UNC Sets",
+      "image": "no-image.png"
+    }
+  ],
+  "products": [
+    {
+      "id_sub_category": "001",
+      "id": "39",
+      "product_title": " ONE RUPEE 1947",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "41",
+      "product_title": "HALF RUPEE 1946-1947 ",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "42",
+      "product_title": " 8 ANNAS 1919-1920",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "44",
+      "product_title": " QUARTER RUPEE 1946-1947",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "45",
+      "product_title": " 4 ANNAS 1919-1921",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "46",
+      "product_title": " 2 ANNAS 1918-1947",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "47",
+      "product_title": " 1 ANNA 1907-1947",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "48",
+      "product_title": " 1/2 ANNA 1942-1947",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "49",
+      "product_title": "HALF ANNA 1835-1877",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "001",
+      "id": "71",
+      "product_title": "1/12 ANNA 1835-1942",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "002",
+      "id": "72",
+      "product_title": "1/2 PICE 1853-1940",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category": "002",
+      "id": "73",
+      "product_title": "ONE QUARTER ANNA 1835-1942",
+      "image": "no-image.png"
+    },
+    {
+      "id_sub_category" : "002",
+      "id": "74",
+      "product_title": "1 PICE 1943-1947",
+      "image": "no-image.png"
+    }
+  ]
+}

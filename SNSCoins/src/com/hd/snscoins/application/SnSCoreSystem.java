@@ -11,6 +11,7 @@ import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.fixtures.SnsFixtureDataCreator;
+import com.hd.snscoins.network.NetworkController;
 import com.hd.snscoins.utils.SnsBuildConfiguration;
 
 /**
@@ -39,14 +40,15 @@ public class SnSCoreSystem extends Application {
         Logger.d(TAG, "Application Started");
 
         ToastMaker.initialize(this);
+        NetworkController.initialize(this);
 
         //Initalize the database
         SnsDatabase.initialize(this);
         SharedPrefs.initialize(this);
 
-        if (!(Boolean) SharedPrefs.getInstance().get(DATABASE_INITIALIZED, false)) {
+        /*if (!(Boolean) SharedPrefs.getInstance().get(DATABASE_INITIALIZED, false)) {
             fixtureDataCreator.createFixtureData(this);
-        }
+        }*/
     }
 
     public void setTransientSubType(CoinSubType transientSubType) {
