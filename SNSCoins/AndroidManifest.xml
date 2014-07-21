@@ -27,9 +27,11 @@
         </activity>
         <activity android:name=".ui.CoinListActivity_" >
         </activity>
-        <activity android:name=".ui.CoinTypeActivity_" >
+        <activity android:name=".ui.CoinActivity_" >
         </activity>
-        <activity android:name=".ui.CoinCurrencyTypeActivity_" >
+        <activity android:name=".ui.CurrenciesActivity_" >
+        </activity>
+        <activity android:name=".ui.EventsActivity_" >
         </activity>
     </application>
 

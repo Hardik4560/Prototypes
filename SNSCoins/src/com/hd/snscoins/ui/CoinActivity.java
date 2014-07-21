@@ -16,27 +16,26 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
-import com.hd.snscoins.constants.SnsConstants;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.core.CoinType;
 import com.hd.snscoins.db.SnsDatabase;
 
 @EActivity(R.layout.activity_coin_country_type)
-public class CoinTypeActivity extends Activity {
+public class CoinActivity extends Activity {
 
-    private List<CoinType> coinTypeList;
+    private List<CoinType> coinList;
     SnSCoreSystem mAppContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        coinTypeList = SnsDatabase.session().getCoinTypeDao().loadAll();
+        coinList = SnsDatabase.session().getCoinTypeDao().loadAll();
         mAppContext = (SnSCoreSystem) getApplicationContext();
     }
 
     public void onBritishIndiaCoinsClicked(View v) {
-        CoinType coinType = coinTypeList.get(0);
+        CoinType coinType = coinList.get(0);
         final List<CoinSubType> subTypeList = coinType.getSubTypeList();
 
         ArrayAdapter<CoinSubType> adapter = new ArrayAdapter<CoinSubType>(this, android.R.layout.simple_list_item_single_choice, subTypeList);
@@ -58,7 +57,7 @@ public class CoinTypeActivity extends Activity {
     }
 
     public void onRepublicClicked(View v) {
-        CoinType coinType = coinTypeList.get(1);
+        CoinType coinType = coinList.get(1);
         final List<CoinSubType> subTypeList = coinType.getSubTypeList();
 
         ArrayAdapter<CoinSubType> adapter = new ArrayAdapter<CoinSubType>(this, android.R.layout.simple_list_item_single_choice, subTypeList);
@@ -79,7 +78,7 @@ public class CoinTypeActivity extends Activity {
     }
 
     public void onUncirculatedSetClicked(View v) {
-        CoinType coinType = coinTypeList.get(2);
+        CoinType coinType = coinList.get(2);
         final List<CoinSubType> subTypeList = coinType.getSubTypeList();
 
         ArrayAdapter<CoinSubType> adapter = new ArrayAdapter<CoinSubType>(this, android.R.layout.simple_list_item_single_choice, subTypeList);

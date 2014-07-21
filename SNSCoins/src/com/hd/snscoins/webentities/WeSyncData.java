@@ -6,7 +6,8 @@ import java.util.List;
 public class WeSyncData {
     List<WeCategory> category;
     List<WeSubCategory> sub_category;
-    List<WeProduct> products;
+    List<WeProduct> product;
+    List<WeEvent> event;
 
     public List<WeCategory> getCategory() {
         return category;
@@ -25,11 +26,18 @@ public class WeSyncData {
     }
 
     public List<WeProduct> getProducts() {
-        return products;
+        return product;
     }
 
     public void setProducts(List<WeProduct> products) {
-        this.products = products;
+        this.product = products;
     }
 
+    public List<WeEvent> getEvent() {
+        return event;
+    }
+
+    public void setEvent(List<WeEvent> event) {
+        this.event = event;
+    }
 }
