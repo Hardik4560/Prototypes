@@ -2,23 +2,24 @@
 package com.hd.snscoins.webentities;
 
 public class WeCategory {
-    Long id;
-    String product_title;
+    Long category_id;
 
-    public Long getId() {
-        return id;
+    String category_title;
+
+    public Long getCategory_id() {
+        return category_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCategory_id(Long category_id) {
+        this.category_id = category_id;
     }
 
-    public String getProduct_title() {
-        return product_title;
+    public String getCategory_title() {
+        return category_title;
     }
 
-    public void setProduct_title(String product_title) {
-        this.product_title = product_title;
+    public void setCategory_title(String category_title) {
+        this.category_title = category_title;
     }
 
 }

@@ -19,6 +19,7 @@ public class SnsCoinsGenerator {
         schema.enableKeepSectionsByDefault();
 
         addCoins(schema);
+        addEvents(schema);
 
         new DaoGenerator().generateAll(schema, "../SNSCoins/src-gen");
     }
@@ -60,5 +61,28 @@ public class SnsCoinsGenerator {
 
         ToMany coinTypeToCoin = sub_type.addToMany(coin, coin_sub_type_id);
         coinTypeToCoin.setName("coinList");
+        
+       /* //Create the year, product will have the list of year and each year should have list of mint.
+        Entity year = schema.addEntity("Year");
+        year.setTableName(SnsDatabase.TABLE_YEAR);
+        year.addIdProperty();
+        year.addStringProperty("year");*/
+        
+        // add the relation.
+    }
+    
+    private static void addEvents(Schema schema){
+    	 //CoinType will have toMany with Coins;
+        Entity type = schema.addEntity("Events");
+        type.setTableName(SnsDatabase.TABLE_EVENTS); // "ORDER" is a reserved keyword
+        type.addIdProperty();
+        type.addStringProperty("title").notNull();
+        type.addStringProperty("start_date");
+        type.addStringProperty("end_date");
+        type.addStringProperty("end_time");
+        type.addStringProperty("venue");
+        type.addStringProperty("details");
+        
+		type.addStringProperty("img_path");
     }
 }

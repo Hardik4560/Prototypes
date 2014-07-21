@@ -9,7 +9,7 @@ import de.greenrobot.dao.DaoException;
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
 /**
- * Entity mapped to table coin_type.
+ * Entity mapped to table type.
  */
 public class CoinType {
 

@@ -16,9 +16,12 @@ public class SnsDatabase {
     private static DaoSession daoSession;
     private static SQLiteDatabase db;
 
-    public static final String TABLE_COIN = "coin";
-    public static final String TABLE_COIN_TYPE = "coin_type";
-    public static final String TABLE_COIN_SUB_TYPE = "coin_sub_type";
+    public static final String TABLE_COIN = "product";
+    public static final String TABLE_COIN_TYPE = "type";
+    public static final String TABLE_COIN_SUB_TYPE = "sub_type";
+	public static final String TABLE_YEAR = "year";
+	
+	public static final String TABLE_EVENTS = "events";
 
     private SnsDatabase(Context context) {
         DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DATABASE_NAME, null);
