@@ -13,6 +13,7 @@ public class Events {
     /** Not-null value. */
     private String title;
     private String start_date;
+    private String start_time;
     private String end_date;
     private String end_time;
     private String venue;
@@ -29,10 +30,11 @@ public class Events {
         this.id = id;
     }
 
-    public Events(Long id, String title, String start_date, String end_date, String end_time, String venue, String details, String img_path) {
+    public Events(Long id, String title, String start_date, String start_time, String end_date, String end_time, String venue, String details, String img_path) {
         this.id = id;
         this.title = title;
         this.start_date = start_date;
+        this.start_time = start_time;
         this.end_date = end_date;
         this.end_time = end_time;
         this.venue = venue;
@@ -64,6 +66,14 @@ public class Events {
 
     public void setStart_date(String start_date) {
         this.start_date = start_date;
+    }
+
+    public String getStart_time() {
+        return start_time;
+    }
+
+    public void setStart_time(String start_time) {
+        this.start_time = start_time;
     }
 
     public String getEnd_date() {

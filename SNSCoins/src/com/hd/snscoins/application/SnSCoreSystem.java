@@ -9,6 +9,7 @@ import com.hardy.logging.Logger;
 import com.hardy.utils.SharedPrefs;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.core.CoinSubType;
+import com.hd.snscoins.core.Events;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.fixtures.SnsFixtureDataCreator;
 import com.hd.snscoins.network.NetworkController;
@@ -30,6 +31,7 @@ public class SnSCoreSystem extends Application {
     SnsFixtureDataCreator fixtureDataCreator;
 
     private CoinSubType transientSubType;
+    private Events transientEvent;
 
     @Override
     public void onCreate() {
@@ -57,5 +59,13 @@ public class SnSCoreSystem extends Application {
 
     public CoinSubType getTransientSubType() {
         return this.transientSubType;
+    }
+
+    public Events getTransientEvent() {
+        return transientEvent;
+    }
+
+    public void setTransientEvent(Events transientEvent) {
+        this.transientEvent = transientEvent;
     }
 }

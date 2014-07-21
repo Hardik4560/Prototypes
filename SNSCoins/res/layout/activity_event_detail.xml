@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lnrContentTop"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:src="@drawable/ic_launcher" />
+
+            <LinearLayout
+                android:id="@+id/lnrDetails"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="70"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/_15dp"
+                android:paddingTop="@dimen/_15dp" >
+
+                <TextView
+                    android:id="@+id/txtTitleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5dp"
+                    android:text="Title"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/gray_999999" />
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/_5dp"
+                    android:text="One Ruppes Coin"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtDateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5dp"
+                    android:text="Date"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/gray_999999" />
+
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/_5dp"
+                    android:text="08-Aug-2014"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnrContentBottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_30dp"
+            android:layout_weight="70"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtVenueLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_bdbdbd"
+                android:padding="@dimen/_5dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:text="Venue"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/gray_333333" />
+
+            <TextView
+                android:id="@+id/txtVenue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10dp"
+                android:text="The Expo Center World Trade Center cuffe parade Colaba Mumbai"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/txtDescriptionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_bdbdbd"
+                android:padding="@dimen/_5dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:text="Description"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/gray_333333" />
+
+            <TextView
+                android:id="@+id/txtDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10dp"
+                android:text="The Expo Center World Trade Center cuffe parade Colaba Mumbai"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

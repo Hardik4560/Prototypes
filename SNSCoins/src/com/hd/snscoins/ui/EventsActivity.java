@@ -9,19 +9,18 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -34,7 +33,7 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.R;
-import com.hd.snscoins.core.Coin;
+import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
@@ -53,11 +52,15 @@ public class EventsActivity extends Activity implements OnRefreshListener {
     @ViewById(R.id.listView)
     ListView listView;
 
+    SnSCoreSystem mAppContext;
+
     @ViewById(R.id.swipeRefreshLayout_listView)
     protected SwipeRefreshLayout mListViewContainer;
 
     @AfterViews
     protected void init() {
+        mAppContext = (SnSCoreSystem) getApplicationContext();
+
         // SwipeRefreshLayout
         mListViewContainer.setOnRefreshListener(this);
 
@@ -126,7 +129,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup arg2) {
+        public View getView(final int position, View convertView, ViewGroup arg2) {
 
             ViewHolder viewHolder = null;
             if (convertView == null) {
@@ -142,12 +145,23 @@ public class EventsActivity extends Activity implements OnRefreshListener {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            String coinName = getItem(position).getTitle();
-            String photoPath = getItem(position).getImg_path();
+            final Events event = getItem(position);
+            String coinName = event.getTitle();
+            String photoPath = event.getImg_path();
 
             viewHolder.name.setText(coinName);
             imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
 
+            convertView.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    mAppContext.setTransientEvent(event);
+
+                    Intent intent = new Intent(EventsActivity.this, EventDetailsActivity_.class);
+                    startActivity(intent);
+                }
+            });
             return convertView;
         }
 
@@ -166,7 +180,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
     @Override
     public void onRefresh() {
         try {
-            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_events.php";
+            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/events_details.php?id=1";
 
             RequestFuture<JSONObject> futureEvents = RequestFuture.newFuture();
             JsonObjectRequest requestEvents = new JsonObjectRequest(GET_EVENTS_URL, new JSONObject(), futureEvents, futureEvents);
@@ -218,7 +232,11 @@ public class EventsActivity extends Activity implements OnRefreshListener {
             for (int i = 0; i < syncDataEvents.getEvent().size(); i++) {
                 WeEvent weEvent = syncDataEvents.getEvent().get(i);
 
-                Events event = new Events(weEvent.getId(), weEvent.getEvent_title(), "");
+                Events event = new Events(weEvent.getId(), weEvent.getEvent_title()
+                        , weEvent.getEvent_start_date(), weEvent.getEvent_start_time()
+                        , weEvent.getEvent_end_date(), weEvent.getEvent_end_time()
+                        , weEvent.getEvent_venue(), weEvent.getEvent_details(), ""
+                               );
                 SnsDatabase.session().getEventsDao().insert(event);
             }
             SnsDatabase.db().setTransactionSuccessful();

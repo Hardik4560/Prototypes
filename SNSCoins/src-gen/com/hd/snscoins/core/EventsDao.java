@@ -26,11 +26,12 @@ public class EventsDao extends AbstractDao<Events, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Start_date = new Property(2, String.class, "start_date", false, "START_DATE");
-        public final static Property End_date = new Property(3, String.class, "end_date", false, "END_DATE");
-        public final static Property End_time = new Property(4, String.class, "end_time", false, "END_TIME");
-        public final static Property Venue = new Property(5, String.class, "venue", false, "VENUE");
-        public final static Property Details = new Property(6, String.class, "details", false, "DETAILS");
-        public final static Property Img_path = new Property(7, String.class, "img_path", false, "IMG_PATH");
+        public final static Property Start_time = new Property(3, String.class, "start_time", false, "START_TIME");
+        public final static Property End_date = new Property(4, String.class, "end_date", false, "END_DATE");
+        public final static Property End_time = new Property(5, String.class, "end_time", false, "END_TIME");
+        public final static Property Venue = new Property(6, String.class, "venue", false, "VENUE");
+        public final static Property Details = new Property(7, String.class, "details", false, "DETAILS");
+        public final static Property Img_path = new Property(8, String.class, "img_path", false, "IMG_PATH");
     };
 
 
@@ -49,11 +50,12 @@ public class EventsDao extends AbstractDao<Events, Long> {
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'TITLE' TEXT NOT NULL ," + // 1: title
                 "'START_DATE' TEXT," + // 2: start_date
-                "'END_DATE' TEXT," + // 3: end_date
-                "'END_TIME' TEXT," + // 4: end_time
-                "'VENUE' TEXT," + // 5: venue
-                "'DETAILS' TEXT," + // 6: details
-                "'IMG_PATH' TEXT);"); // 7: img_path
+                "'START_TIME' TEXT," + // 3: start_time
+                "'END_DATE' TEXT," + // 4: end_date
+                "'END_TIME' TEXT," + // 5: end_time
+                "'VENUE' TEXT," + // 6: venue
+                "'DETAILS' TEXT," + // 7: details
+                "'IMG_PATH' TEXT);"); // 8: img_path
     }
 
     /** Drops the underlying database table. */
@@ -78,29 +80,34 @@ public class EventsDao extends AbstractDao<Events, Long> {
             stmt.bindString(3, start_date);
         }
  
+        String start_time = entity.getStart_time();
+        if (start_time != null) {
+            stmt.bindString(4, start_time);
+        }
+ 
         String end_date = entity.getEnd_date();
         if (end_date != null) {
-            stmt.bindString(4, end_date);
+            stmt.bindString(5, end_date);
         }
  
         String end_time = entity.getEnd_time();
         if (end_time != null) {
-            stmt.bindString(5, end_time);
+            stmt.bindString(6, end_time);
         }
  
         String venue = entity.getVenue();
         if (venue != null) {
-            stmt.bindString(6, venue);
+            stmt.bindString(7, venue);
         }
  
         String details = entity.getDetails();
         if (details != null) {
-            stmt.bindString(7, details);
+            stmt.bindString(8, details);
         }
  
         String img_path = entity.getImg_path();
         if (img_path != null) {
-            stmt.bindString(8, img_path);
+            stmt.bindString(9, img_path);
         }
     }
 
@@ -117,11 +124,12 @@ public class EventsDao extends AbstractDao<Events, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // start_date
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // end_date
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // end_time
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // venue
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // details
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // img_path
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // start_time
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // end_date
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // end_time
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // venue
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // details
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // img_path
         );
         return entity;
     }
@@ -132,11 +140,12 @@ public class EventsDao extends AbstractDao<Events, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTitle(cursor.getString(offset + 1));
         entity.setStart_date(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setEnd_date(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setEnd_time(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setVenue(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setDetails(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setImg_path(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setStart_time(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setEnd_date(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setEnd_time(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setVenue(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setDetails(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setImg_path(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     /** @inheritdoc */

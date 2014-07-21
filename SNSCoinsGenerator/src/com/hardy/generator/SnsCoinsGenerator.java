@@ -78,6 +78,7 @@ public class SnsCoinsGenerator {
         type.addIdProperty();
         type.addStringProperty("title").notNull();
         type.addStringProperty("start_date");
+        type.addStringProperty("start_time");
         type.addStringProperty("end_date");
         type.addStringProperty("end_time");
         type.addStringProperty("venue");
