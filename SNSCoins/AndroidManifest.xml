@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".ui.EventsActivity_" >
         </activity>
+        <activity android:name=".ui.NewsActivity_" >
+        </activity>        
     </application>
 
 </manifest>

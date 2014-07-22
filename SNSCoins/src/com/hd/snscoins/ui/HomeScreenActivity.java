@@ -64,6 +64,12 @@ public class HomeScreenActivity extends Activity {
         startActivity(intent);
     }
 
+    public void onNewsClicked(View v) {
+        Intent intent = new Intent(this, NewsActivity_.class);
+        startActivity(intent);
+    }
+    
+
     private boolean checkDataSynced() {
         return (Boolean) SharedPrefs.getInstance().get(SnsConstants.DATA_SYNCED, false);
     }
