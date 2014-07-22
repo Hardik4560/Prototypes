@@ -20,6 +20,7 @@ public class SnsCoinsGenerator {
 
         addCoins(schema);
         addEvents(schema);
+        addNews(schema);
 
         new DaoGenerator().generateAll(schema, "../SNSCoins/src-gen");
     }
@@ -61,18 +62,18 @@ public class SnsCoinsGenerator {
 
         ToMany coinTypeToCoin = sub_type.addToMany(coin, coin_sub_type_id);
         coinTypeToCoin.setName("coinList");
-        
-       /* //Create the year, product will have the list of year and each year should have list of mint.
-        Entity year = schema.addEntity("Year");
-        year.setTableName(SnsDatabase.TABLE_YEAR);
-        year.addIdProperty();
-        year.addStringProperty("year");*/
-        
+
+        /* //Create the year, product will have the list of year and each year should have list of mint.
+         Entity year = schema.addEntity("Year");
+         year.setTableName(SnsDatabase.TABLE_YEAR);
+         year.addIdProperty();
+         year.addStringProperty("year");*/
+
         // add the relation.
     }
-    
-    private static void addEvents(Schema schema){
-    	 //CoinType will have toMany with Coins;
+
+    private static void addEvents(Schema schema) {
+        //CoinType will have toMany with Coins;
         Entity type = schema.addEntity("Events");
         type.setTableName(SnsDatabase.TABLE_EVENTS); // "ORDER" is a reserved keyword
         type.addIdProperty();
@@ -82,7 +83,19 @@ public class SnsCoinsGenerator {
         type.addStringProperty("end_time");
         type.addStringProperty("venue");
         type.addStringProperty("details");
-        
-		type.addStringProperty("img_path");
+
+        type.addStringProperty("img_path");
+    }
+
+    private static void addNews(Schema schema) {
+        Entity type = schema.addEntity("News");
+        type.setTableName(SnsDatabase.TABLE_NEWS);
+        type.addIdProperty();
+        type.addStringProperty("title").notNull();
+        type.addStringProperty("date");
+        type.addStringProperty("time");
+        type.addStringProperty("details");
+
+        type.addStringProperty("img_path");
     }
 }
