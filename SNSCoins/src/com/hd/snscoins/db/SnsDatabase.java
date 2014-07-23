@@ -22,6 +22,7 @@ public class SnsDatabase {
 	public static final String TABLE_YEAR = "year";
 	
 	public static final String TABLE_EVENTS = "events";
+	public static final String TABLE_NEWS = "news";
 
     private SnsDatabase(Context context) {
         DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DATABASE_NAME, null);

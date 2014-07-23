@@ -8,6 +8,7 @@ public class WeSyncData {
     List<WeSubCategory> sub_category;
     List<WeProduct> product;
     List<WeEvent> event;
+    List<WeNews> news;
 
     public List<WeCategory> getCategory() {
         return category;
@@ -40,4 +41,13 @@ public class WeSyncData {
     public void setEvent(List<WeEvent> event) {
         this.event = event;
     }
+
+    public List<WeNews> getNews() {
+        return news;
+    }
+
+    public void setNews(List<WeNews> news) {
+        this.news = news;
+    }
+
 }

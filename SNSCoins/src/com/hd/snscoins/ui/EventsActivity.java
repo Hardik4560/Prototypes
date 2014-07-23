@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -72,7 +73,21 @@ public class EventsActivity extends Activity implements OnRefreshListener {
 
         adapterEvents = new EventAdapter(this);
         listView.setAdapter(adapterEvents);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                                             (listView == null || listView.getChildCount() == 0) ?
+                                                                                                0 : listView.getChildAt(0).getTop();
+                mListViewContainer.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
+        
         loadData();
     }
 
@@ -129,7 +144,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup arg2) {
+        public View getView(int position, View convertView, ViewGroup arg2) {
 
             ViewHolder viewHolder = null;
             if (convertView == null) {
@@ -180,7 +195,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
     @Override
     public void onRefresh() {
         try {
-            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/events_details.php?id=1";
+            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_all_events.php";
 
             RequestFuture<JSONObject> futureEvents = RequestFuture.newFuture();
             JsonObjectRequest requestEvents = new JsonObjectRequest(GET_EVENTS_URL, new JSONObject(), futureEvents, futureEvents);

@@ -20,6 +20,7 @@ public class SnsCoinsGenerator {
 
         addCoins(schema);
         addEvents(schema);
+        addNews(schema);
 
         new DaoGenerator().generateAll(schema, "../SNSCoins/src-gen");
     }
@@ -85,5 +86,16 @@ public class SnsCoinsGenerator {
         type.addStringProperty("details");
         
 		type.addStringProperty("img_path");
+    }
+     private static void addNews(Schema schema) {
+        Entity type = schema.addEntity("News");
+        type.setTableName(SnsDatabase.TABLE_NEWS);
+        type.addIdProperty();
+        type.addStringProperty("title").notNull();
+        type.addStringProperty("date");
+        type.addStringProperty("time");
+        type.addStringProperty("details");
+
+        type.addStringProperty("img_path");
     }
 }
