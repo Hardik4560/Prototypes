@@ -1,24 +1,30 @@
 
 package com.hd.snscoins.ui;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
-import com.hd.snscoins.core.Events;
 import com.hd.snscoins.core.News;
+import com.hd.snscoins.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.text.Html;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 @EActivity(R.layout.activity_event_detail)
 public class NewsDetailsActivity extends Activity {
@@ -99,7 +105,39 @@ public class NewsDetailsActivity extends Activity {
 
             String photoPath = news.getImg_path();
 
-            imageLoader.displayImage("file://" + photoPath, imgView, options);
+            if (photoPath.equals("")) {
+                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", imgView, options);
+                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", imgView, options, new ImageLoadingListener() {
+
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //Save the image in file system.
+                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
+                        news.setImg_path(image);
+                        news.update();
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+            }
+            else {
+                imageLoader.displayImage("file://" + photoPath, imgView, options);
+            }
         }
-    }
+    }   
 }

@@ -62,6 +62,7 @@ public class SplashScreenActivity extends Activity {
         else {
             Intent intent = new Intent(getApplicationContext(), HomeScreenActivity_.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -207,6 +208,7 @@ public class SplashScreenActivity extends Activity {
             if (result) {
                 Intent intent = new Intent(getApplicationContext(), HomeScreenActivity_.class);
                 startActivity(intent);
+                finish();
             }
             else {
                 ToastMaker.getInstance().createToast("Error syncing data");

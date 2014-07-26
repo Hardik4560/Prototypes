@@ -211,10 +211,10 @@ public class NewsActivity extends Activity implements OnRefreshListener {
     @Override
     public void onRefresh() {
         try {
-            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_news.php?id=" + newsCategory.getId();
+            final String GET_NEWS_URL = "http://demo.iccgnews.com/mobile/get_news.php?id=" + newsCategory.getId();
 
             RequestFuture<JSONObject> futureEvents = RequestFuture.newFuture();
-            JsonObjectRequest requestEvents = new JsonObjectRequest(GET_EVENTS_URL, new JSONObject(), futureEvents, futureEvents);
+            JsonObjectRequest requestEvents = new JsonObjectRequest(GET_NEWS_URL, new JSONObject(), futureEvents, futureEvents);
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -244,7 +244,8 @@ public class NewsActivity extends Activity implements OnRefreshListener {
             e.printStackTrace();
         }
 
-        final List<News> newsList = SnsDatabase.session().getNewsDao().loadAll();
+        newsCategory.resetNewsList();
+        final List<News> newsList = newsCategory.getNewsList();
 
         runOnUiThread(new Runnable() {
 

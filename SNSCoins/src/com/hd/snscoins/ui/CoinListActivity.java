@@ -7,7 +7,9 @@ import java.util.List;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,9 +25,12 @@ import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Coin;
 import com.hd.snscoins.core.CoinSubType;
+import com.hd.snscoins.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 @EActivity(R.layout.activity_coin_list)
 public class CoinListActivity extends ListActivity {
@@ -113,12 +118,45 @@ public class CoinListActivity extends ListActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            String coinName = getItem(position).getName();
-            String photoPath = getItem(position).getIcon_location();
+            final Coin coin = getItem(position);
+            String coinName = coin.getName();
+            String photoPath = coin.getIcon_location();
 
             viewHolder.name.setText(coinName);
-            imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
 
+            if (photoPath.equals("")) {
+                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", viewHolder.photo, options);
+                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", viewHolder.photo, options, new ImageLoadingListener() {
+
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //Save the image in file system.
+                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
+                        coin.setIcon_location(image);
+                        coin.update();
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                });
+            }
+            else {
+                ContextWrapper cw = new ContextWrapper(getApplicationContext());
+                
+                imageLoader.displayImage("file://" +  photoPath, viewHolder.photo, options);
+            }
             return convertView;
         }
 
