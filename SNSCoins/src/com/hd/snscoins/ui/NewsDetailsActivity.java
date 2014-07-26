@@ -7,6 +7,7 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;
+import com.hd.snscoins.core.News;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -15,11 +16,12 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 @EActivity(R.layout.activity_event_detail)
-public class EventDetailsActivity extends Activity {
+public class NewsDetailsActivity extends Activity {
 
     @ViewById(R.id.txtTitle)
     protected TextView txtTitle;
@@ -30,6 +32,9 @@ public class EventDetailsActivity extends Activity {
     @ViewById(R.id.txtStartTime)
     protected TextView txtStartTime;
 
+    @ViewById(R.id.txtEndLabel)
+    protected TextView txtEnd;
+
     @ViewById(R.id.txtEndDate)
     protected TextView txtEndDate;
 
@@ -39,13 +44,16 @@ public class EventDetailsActivity extends Activity {
     @ViewById(R.id.txtVenue)
     protected TextView txtVenue;
 
+    @ViewById(R.id.txtVenueLabel)
+    protected TextView txtVenueLabel;
+
     @ViewById(R.id.txtDescription)
     protected TextView txtDescription;
 
     @ViewById(R.id.img_view)
     protected ImageView imgView;
 
-    private Events event;
+    private News news;
 
     public ImageLoader imageLoader;
     DisplayImageOptions options;
@@ -58,8 +66,8 @@ public class EventDetailsActivity extends Activity {
 
         }
         else {
-            event = ((SnSCoreSystem) getApplicationContext()).getTransientEvent();
-            ((SnSCoreSystem) getApplicationContext()).setTransientEvent(null);
+            news = ((SnSCoreSystem) getApplicationContext()).getTransientNews();
+            ((SnSCoreSystem) getApplicationContext()).setTransientNews(null);
 
             //Initialize lazy loading api.
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
@@ -76,17 +84,20 @@ public class EventDetailsActivity extends Activity {
 
     @AfterViews
     protected void init() {
-        if (event != null) {
-            txtTitle.setText(event.getTitle());
-            txtStartDate.setText(event.getStart_date());
-            txtStartTime.setText(event.getStart_time());
-            txtEndDate.setText(event.getEnd_date());
-            txtEndTime.setText(event.getEnd_time());
+        if (news != null) {
+            txtTitle.setText(news.getTitle());
+            txtStartDate.setText(news.getDate());
+            txtStartTime.setText(news.getTime());
 
-            txtVenue.setText(event.getVenue());
-            txtDescription.setText(Html.fromHtml(event.getDetails()));
+            txtEnd.setVisibility(View.GONE);
+            txtEndDate.setVisibility(View.GONE);
+            txtEndTime.setVisibility(View.GONE);
+            txtVenue.setVisibility(View.GONE);
+            txtVenueLabel.setVisibility(View.GONE);
 
-            String photoPath = event.getImg_path();
+            txtDescription.setText(news.getDetails());
+
+            String photoPath = news.getImg_path();
 
             imageLoader.displayImage("file://" + photoPath, imgView, options);
         }

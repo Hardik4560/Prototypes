@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Show gif animation" />
+        android:text="Show gif animation"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btnToggle"
@@ -25,7 +26,7 @@
         android:layout_below="@+id/gifPlayer1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="78dp"
-        android:text="Toggle Source" />
+        android:text="Play" />
 
     <com.hardy.view.GifPlayer
         android:id="@+id/gifPlayer1"
@@ -33,9 +34,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnAnimation"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="114dp"
-        app:repeatCount="-1"
-        app:src="clock.gif" >
+        android:layout_marginTop="114dp" >
     </com.hardy.view.GifPlayer>
+
+    <Button
+        android:id="@+id/btnPause"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btnToggle"
+        android:layout_below="@+id/btnToggle"
+        android:text="Pause" />
+
+    <Button
+        android:id="@+id/btnResume"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btnPause"
+        android:layout_below="@+id/btnPause"
+        android:text="Resume" />
 
 </RelativeLayout>

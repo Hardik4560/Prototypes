@@ -17,7 +17,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onBritishIndiaCoinsClicked"
-        android:text="British India Coins" />
+        android:text="British India Coins 1835 - 1947" />
 
     <Button
         android:id="@+id/btnRepublic"
@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onRepublicClicked"
-        android:text="Republic" />
+        android:text="Republic India Coins 1950 Onwards" />
 
     <Button
         android:id="@+id/btnUncirculatedSet"
@@ -35,6 +35,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onUncirculatedSetClicked"
-        android:text="Uncirculated Sets" />
+        android:text="UNC / Proof Set" />
 
 </LinearLayout>

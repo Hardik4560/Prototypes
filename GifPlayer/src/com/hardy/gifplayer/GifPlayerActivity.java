@@ -5,7 +5,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.Vector;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -14,6 +13,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -29,6 +29,8 @@ import com.hardy.gifdecoder.GifDecoderView;
 import com.hardy.view.GifPlayer;
 
 public class GifPlayerActivity extends Activity implements PropertyChangeListener {
+
+    private static final String TAG = GifPlayerActivity.class.getSimpleName();
 
     Context mActivityContext;
 
@@ -53,6 +55,34 @@ public class GifPlayerActivity extends Activity implements PropertyChangeListene
             @Override
             public void onClick(View v) {
                 new ShowGifAnimation(GifPlayerActivity.this, R.raw.kiss).execute();
+            }
+        });
+
+        Button btnToggle = (Button) findViewById(R.id.btnToggle);
+        btnToggle.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                gifPlayerView.setSrc("kiss.gif");
+                gifPlayerView.play(-1);
+            }
+        });
+
+        Button btnPause = (Button) findViewById(R.id.btnPause);
+        btnPause.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                gifPlayerView.pause();
+            }
+        });
+
+        Button btnResume = (Button) findViewById(R.id.btnResume);
+        btnResume.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                gifPlayerView.resume();
             }
         });
 
@@ -142,7 +172,7 @@ public class GifPlayerActivity extends Activity implements PropertyChangeListene
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             gifDialog.addContentView(giftLayout, lp);
             gifDialog.show();
-            gdView.playGif(stream, false);
+            gdView.playGif();
 
             super.onPostExecute(result);
         }
@@ -169,5 +199,18 @@ public class GifPlayerActivity extends Activity implements PropertyChangeListene
             gdView.removePropertyChangeListener(this);
             postGifAnimation();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+        gifPlayerView.recycle();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        gifPlayerView.recycle();
     }
 }

@@ -2,6 +2,7 @@
 package com.hd.snscoins.ui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -9,12 +10,14 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -32,7 +35,9 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.R;
+import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.News;
+import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
 import com.hd.snscoins.webentities.WeNews;
@@ -50,11 +55,23 @@ public class NewsActivity extends Activity implements OnRefreshListener {
     @ViewById(R.id.listView)
     ListView listView;
 
+    @ViewById(R.id.empty_view)
+    TextView emptyView;
+
     @ViewById(R.id.swipeRefreshLayout_listView)
     protected SwipeRefreshLayout mListViewContainer;
 
+    SnSCoreSystem mAppContext;
+
+    NewsCategory newsCategory;
+
     @AfterViews
     protected void init() {
+        mAppContext = (SnSCoreSystem) getApplicationContext();
+
+        newsCategory = mAppContext.getTransientNewsCategory();
+        mAppContext.setTransientNewsCategory(null);
+
         // SwipeRefreshLayout
         mListViewContainer.setOnRefreshListener(this);
 
@@ -74,8 +91,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int topRowVerticalPosition =
-                                             (listView == null || listView.getChildCount() == 0) ?
+                int topRowVerticalPosition = (listView == null || listView.getChildCount() == 0) ?
                                                                                                 0 : listView.getChildAt(0).getTop();
                 mListViewContainer.setEnabled(topRowVerticalPosition >= 0);
             }
@@ -84,14 +100,21 @@ public class NewsActivity extends Activity implements OnRefreshListener {
     }
 
     private void loadData() {
-        List<News> eventList = SnsDatabase.session().getNewsDao().loadAll();
-
-        if (!eventList.isEmpty()) {
-            adapterNews.setDataSource(eventList);
+        if (newsCategory == null) {
+            emptyView.setVisibility(View.VISIBLE);
         }
         else {
-            mListViewContainer.setRefreshing(true);
-            onRefresh();
+            emptyView.setVisibility(View.GONE);
+
+            List<News> newsList = newsCategory.getNewsList();
+
+            if (!newsList.isEmpty()) {
+                adapterNews.setDataSource(newsList);
+            }
+            else {
+                mListViewContainer.setRefreshing(true);
+                onRefresh();
+            }
         }
     }
 
@@ -152,12 +175,24 @@ public class NewsActivity extends Activity implements OnRefreshListener {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            String coinName = getItem(position).getTitle();
-            String photoPath = getItem(position).getImg_path();
+            final News news = getItem(position);
+
+            String coinName = news.getTitle();
+            String photoPath = news.getImg_path();
 
             viewHolder.name.setText(coinName);
             imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
 
+            convertView.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    mAppContext.setTransientNews(news);
+
+                    Intent intent = new Intent(NewsActivity.this, NewsDetailsActivity_.class);
+                    startActivity(intent);
+                }
+            });
             return convertView;
         }
 
@@ -176,7 +211,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
     @Override
     public void onRefresh() {
         try {
-            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_all_news.php";
+            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_news.php?id=" + newsCategory.getId();
 
             RequestFuture<JSONObject> futureEvents = RequestFuture.newFuture();
             JsonObjectRequest requestEvents = new JsonObjectRequest(GET_EVENTS_URL, new JSONObject(), futureEvents, futureEvents);
@@ -217,6 +252,10 @@ public class NewsActivity extends Activity implements OnRefreshListener {
             public void run() {
                 mListViewContainer.setRefreshing(false);
                 adapterNews.setDataSource(newsList);
+
+                if (newsList.isEmpty()) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -224,9 +263,12 @@ public class NewsActivity extends Activity implements OnRefreshListener {
 
     private boolean saveNewsDataToDb(WeSyncData syncDataEvents) {
         try {
-            SnsDatabase.session().deleteAll(News.class);
+            List<News> newsList = newsCategory.getNewsList();
+            for (Iterator<News> iterator = newsList.iterator(); iterator.hasNext();) {
+                News news2 = iterator.next();
+                news2.delete();
+            }
 
-            SnsDatabase.db().beginTransaction();
             // Persist in the database
             // Save the CoinType
             for (int i = 0; i < syncDataEvents.getNews().size(); i++) {
@@ -234,18 +276,14 @@ public class NewsActivity extends Activity implements OnRefreshListener {
 
                 News news = new News(weNews.getId(), weNews.getNews_title()
                         , weNews.getNews_date(), weNews.getNews_time()
-                        , weNews.getNews_details(), "");
+                        , weNews.getNews_details(), "", newsCategory.getId());
                 SnsDatabase.session().getNewsDao().insert(news);
             }
-            SnsDatabase.db().setTransactionSuccessful();
         }
         catch (Exception e) {
             e.printStackTrace();
             // exception handling
             return false;
-        }
-        finally {
-            SnsDatabase.db().endTransaction();
         }
         return true;
     }

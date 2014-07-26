@@ -9,6 +9,7 @@ public class WeSyncData {
     List<WeProduct> product;
     List<WeEvent> event;
     List<WeNews> news;
+    List<WeNewsCategory> news_category;
 
     public List<WeCategory> getCategory() {
         return category;
@@ -48,6 +49,14 @@ public class WeSyncData {
 
     public void setNews(List<WeNews> news) {
         this.news = news;
+    }
+
+    public List<WeNewsCategory> getNews_category() {
+        return news_category;
+    }
+
+    public void setNews_category(List<WeNewsCategory> news_category) {
+        this.news_category = news_category;
     }
 
 }

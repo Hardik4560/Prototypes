@@ -10,6 +10,8 @@ import com.hardy.utils.SharedPrefs;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.core.Events;
+import com.hd.snscoins.core.News;
+import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.fixtures.SnsFixtureDataCreator;
 import com.hd.snscoins.network.NetworkController;
@@ -32,6 +34,8 @@ public class SnSCoreSystem extends Application {
 
     private CoinSubType transientSubType;
     private Events transientEvent;
+    private NewsCategory transientNewsCategory;
+    private News transientNews;
 
     @Override
     public void onCreate() {
@@ -67,5 +71,21 @@ public class SnSCoreSystem extends Application {
 
     public void setTransientEvent(Events transientEvent) {
         this.transientEvent = transientEvent;
+    }
+
+    public News getTransientNews() {
+        return transientNews;
+    }
+
+    public void setTransientNews(News transientNews) {
+        this.transientNews = transientNews;
+    }
+
+    public NewsCategory getTransientNewsCategory() {
+        return transientNewsCategory;
+    }
+
+    public void setTransientNewsCategory(NewsCategory transientCategory) {
+        this.transientNewsCategory = transientCategory;
     }
 }

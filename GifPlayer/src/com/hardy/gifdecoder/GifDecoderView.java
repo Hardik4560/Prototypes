@@ -5,9 +5,12 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.InputStream;
 
+import com.hardy.log.Logger;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -17,10 +20,13 @@ public class GifDecoderView extends ImageView {
     private boolean isAnimationCompleted;
 
     public final static String ANIMATION_COMPLETED = "animationCompleted";
+    private static final String TAG = GifDecoderView.class.getSimpleName();
 
     private Bitmap mTmpBitmap;
 
     private int mRepeatCount;
+
+    private PlayAnimation mPlayAnimationLoader;
 
     /**
      * Create a view that will play the gif animation.
@@ -37,10 +43,16 @@ public class GifDecoderView extends ImageView {
         mGifDecoder.read(stream);
     }
 
-    public void playGif(InputStream stream, boolean isGiftSendAnimation) {
+    public void playGif() {
 
         isAnimationCompleted = false;
-        new StartAnimation().execute((Void[]) null);
+
+        if (mPlayAnimationLoader != null) {
+            mPlayAnimationLoader.cancel(true);
+        }
+
+        mPlayAnimationLoader = new PlayAnimation();
+        mPlayAnimationLoader.execute();
     }
 
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
@@ -64,12 +76,16 @@ public class GifDecoderView extends ImageView {
         propertyChangeSupport.firePropertyChange(ANIMATION_COMPLETED, isAnimationCompletedOld, isAnimationCompleted);
     }
 
-    class StartAnimation extends AsyncTask<Void, Integer, Void> {
+    class PlayAnimation extends AsyncTask<Void, Integer, Void> {
         final int n = mGifDecoder.getFrameCount();
+        boolean isPaused = true;
+        String test = "Test";
 
         @Override
         protected Void doInBackground(Void... params) {
             Log.d("Gif", "RepeatCount = " + mRepeatCount);
+            isPaused = false;
+
             do {
                 for (int i = 0; i < n; i++) {
                     mTmpBitmap = mGifDecoder.getFrame(i);
@@ -81,13 +97,26 @@ public class GifDecoderView extends ImageView {
                     catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                    synchronized (test) {
+                        if (isPaused) {
+
+                            try {
+                                Logger.d(TAG, "Waiting");
+                                test.wait();
+                            }
+                            catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
                 }
-                
-                if (mRepeatCount != -1) {
+
+                if (mRepeatCount > 0) {
                     mRepeatCount--;
                 }
             } while (mRepeatCount > 0 || mRepeatCount == -1);
-
             return null;
         }
 
@@ -108,7 +137,42 @@ public class GifDecoderView extends ImageView {
             super.onPostExecute(result);
 
             setAnimationCompleted(true);
+        }
 
+        public void pause() {
+            synchronized (test) {
+                Logger.d(TAG, "onPaused");
+                isPaused = true;
+            }
+        }
+
+        public void resume() {
+            synchronized (test) {
+                Logger.d(TAG, "onResume, notifying");
+                isPaused = false;
+                test.notify();
+            }
+        }
+    }
+
+    public void destroy() {
+        if (mPlayAnimationLoader != null) {
+            mPlayAnimationLoader.cancel(true);
+            mGifDecoder.destroy();
+
+            Log.d(TAG, "GifDecoderView destroyed");
+        }
+    }
+
+    public void pauseAnimating() {
+        if (mPlayAnimationLoader != null && mPlayAnimationLoader.getStatus() == Status.RUNNING) {
+            mPlayAnimationLoader.pause();
+        }
+    }
+
+    public void resumeAnimating() {
+        if (mPlayAnimationLoader != null && mPlayAnimationLoader.getStatus() == Status.RUNNING) {
+            mPlayAnimationLoader.resume();
         }
     }
 }

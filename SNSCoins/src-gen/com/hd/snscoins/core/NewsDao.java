@@ -1,12 +1,17 @@
 package com.hd.snscoins.core;
 
+import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
+import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import com.hd.snscoins.core.News;
 
@@ -29,8 +34,12 @@ public class NewsDao extends AbstractDao<News, Long> {
         public final static Property Time = new Property(3, String.class, "time", false, "TIME");
         public final static Property Details = new Property(4, String.class, "details", false, "DETAILS");
         public final static Property Img_path = new Property(5, String.class, "img_path", false, "IMG_PATH");
+        public final static Property Id_category = new Property(6, long.class, "id_category", false, "ID_CATEGORY");
     };
 
+    private DaoSession daoSession;
+
+    private Query<News> newsCategory_NewsListQuery;
 
     public NewsDao(DaoConfig config) {
         super(config);
@@ -38,6 +47,7 @@ public class NewsDao extends AbstractDao<News, Long> {
     
     public NewsDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -49,7 +59,8 @@ public class NewsDao extends AbstractDao<News, Long> {
                 "'DATE' TEXT," + // 2: date
                 "'TIME' TEXT," + // 3: time
                 "'DETAILS' TEXT," + // 4: details
-                "'IMG_PATH' TEXT);"); // 5: img_path
+                "'IMG_PATH' TEXT," + // 5: img_path
+                "'ID_CATEGORY' INTEGER NOT NULL );"); // 6: id_category
     }
 
     /** Drops the underlying database table. */
@@ -88,6 +99,13 @@ public class NewsDao extends AbstractDao<News, Long> {
         if (img_path != null) {
             stmt.bindString(6, img_path);
         }
+        stmt.bindLong(7, entity.getId_category());
+    }
+
+    @Override
+    protected void attachEntity(News entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -105,7 +123,8 @@ public class NewsDao extends AbstractDao<News, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // date
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // time
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // details
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // img_path
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // img_path
+            cursor.getLong(offset + 6) // id_category
         );
         return entity;
     }
@@ -119,6 +138,7 @@ public class NewsDao extends AbstractDao<News, Long> {
         entity.setTime(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setDetails(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setImg_path(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setId_category(cursor.getLong(offset + 6));
      }
     
     /** @inheritdoc */
@@ -144,4 +164,111 @@ public class NewsDao extends AbstractDao<News, Long> {
         return true;
     }
     
+    /** Internal query to resolve the "newsList" to-many relationship of NewsCategory. */
+    public List<News> _queryNewsCategory_NewsList(long id_category) {
+        synchronized (this) {
+            if (newsCategory_NewsListQuery == null) {
+                QueryBuilder<News> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.Id_category.eq(null));
+                newsCategory_NewsListQuery = queryBuilder.build();
+            }
+        }
+        Query<News> query = newsCategory_NewsListQuery.forCurrentThread();
+        query.setParameter(0, id_category);
+        return query.list();
+    }
+
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getNewsCategoryDao().getAllColumns());
+            builder.append(" FROM news T");
+            builder.append(" LEFT JOIN news_type T0 ON T.'ID_CATEGORY'=T0.'_id'");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected News loadCurrentDeep(Cursor cursor, boolean lock) {
+        News entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        NewsCategory newsCategory = loadCurrentOther(daoSession.getNewsCategoryDao(), cursor, offset);
+         if(newsCategory != null) {
+            entity.setNewsCategory(newsCategory);
+        }
+
+        return entity;    
+    }
+
+    public News loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<News> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<News> list = new ArrayList<News>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<News> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<News> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

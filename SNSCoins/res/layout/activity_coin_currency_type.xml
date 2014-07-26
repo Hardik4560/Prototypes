@@ -17,7 +17,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onBritishClicked"
-        android:text="British" />
+        android:text="British India Currency 1835 - 1947" />
 
     <Button
         android:id="@+id/btnRepublic"
@@ -26,5 +26,5 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:onClick="onRepublicClicked"
-        android:text="Republic" />
+        android:text="Republic India Currency 1950 Onwards " />
 </LinearLayout>
