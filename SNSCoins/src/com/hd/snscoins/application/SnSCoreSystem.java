@@ -8,6 +8,7 @@ import com.googlecode.androidannotations.annotations.EApplication;
 import com.hardy.logging.Logger;
 import com.hardy.utils.SharedPrefs;
 import com.hardy.utils.ToastMaker;
+import com.hd.snscoins.core.Coin;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.core.Events;
 import com.hd.snscoins.core.News;
@@ -36,6 +37,7 @@ public class SnSCoreSystem extends Application {
     private Events transientEvent;
     private NewsCategory transientNewsCategory;
     private News transientNews;
+    private Coin transientProduct;
 
     @Override
     public void onCreate() {
@@ -87,5 +89,13 @@ public class SnSCoreSystem extends Application {
 
     public void setTransientNewsCategory(NewsCategory transientCategory) {
         this.transientNewsCategory = transientCategory;
+    }
+
+    public Coin getTransientProduct() {
+        return transientProduct;
+    }
+
+    public void setTransientProduct(Coin transientProduct) {
+        this.transientProduct = transientProduct;
     }
 }

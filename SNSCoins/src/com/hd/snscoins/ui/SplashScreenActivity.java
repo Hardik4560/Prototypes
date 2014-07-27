@@ -126,10 +126,12 @@ public class SplashScreenActivity extends Activity {
             catch (InterruptedException e) {
                 // exception handling
                 success = false;
+                e.printStackTrace();
             }
             catch (ExecutionException e) {
                 // exception handling
                 success = false;
+                e.printStackTrace();
             }
             return success;
         }
@@ -180,12 +182,10 @@ public class SplashScreenActivity extends Activity {
                 }
 
                 // Create some coins
-                for (int i = 0; i < syncData.getProducts().size(); i++) {
-                    WeProduct weProduct = syncData.getProducts().get(i);
+                for (int i = 0; i < syncData.getProduct().size(); i++) {
+                    WeProduct weProduct = syncData.getProduct().get(i);
 
-                    Coin coin = new Coin(weProduct.getProduct_id(),
-                            weProduct.getProduct_title(), "",
-                            weProduct.getSub_category_id());
+                    Coin coin = new Coin(weProduct.getProduct_id(), weProduct.getProduct_title(), "", weProduct.getSub_category_id());
                     SnsDatabase.session().getCoinDao().insert(coin);
                 }
 

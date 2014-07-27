@@ -1,6 +1,5 @@
 package com.hd.snscoins.core;
 
-import java.util.List;
 import com.hd.snscoins.core.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -9,40 +8,46 @@ import de.greenrobot.dao.DaoException;
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
 /**
- * Entity mapped to table news_type.
+ * Entity mapped to table mint.
  */
-public class NewsCategory {
+public class Mint {
 
     private Long id;
     private String title;
+    private Integer rare;
+    private long id_year;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
 
     /** Used for active entity operations. */
-    private transient NewsCategoryDao myDao;
+    private transient MintDao myDao;
 
-    private List<News> newsList;
+    private Year year;
+    private Long year__resolvedKey;
+
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
 
-    public NewsCategory() {
+    public Mint() {
     }
 
-    public NewsCategory(Long id) {
+    public Mint(Long id) {
         this.id = id;
     }
 
-    public NewsCategory(Long id, String title) {
+    public Mint(Long id, String title, Integer rare, long id_year) {
         this.id = id;
         this.title = title;
+        this.rare = rare;
+        this.id_year = id_year;
     }
 
     /** called by internal mechanisms, do not call yourself. */
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getNewsCategoryDao() : null;
+        myDao = daoSession != null ? daoSession.getMintDao() : null;
     }
 
     public Long getId() {
@@ -61,26 +66,48 @@ public class NewsCategory {
         this.title = title;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<News> getNewsList() {
-        if (newsList == null) {
+    public Integer getRare() {
+        return rare;
+    }
+
+    public void setRare(Integer rare) {
+        this.rare = rare;
+    }
+
+    public long getId_year() {
+        return id_year;
+    }
+
+    public void setId_year(long id_year) {
+        this.id_year = id_year;
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Year getYear() {
+        long __key = this.id_year;
+        if (year__resolvedKey == null || !year__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            NewsDao targetDao = daoSession.getNewsDao();
-            List<News> newsListNew = targetDao._queryNewsCategory_NewsList(id);
+            YearDao targetDao = daoSession.getYearDao();
+            Year yearNew = targetDao.load(__key);
             synchronized (this) {
-                if(newsList == null) {
-                    newsList = newsListNew;
-                }
+                year = yearNew;
+            	year__resolvedKey = __key;
             }
         }
-        return newsList;
+        return year;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetNewsList() {
-        newsList = null;
+    public void setYear(Year year) {
+        if (year == null) {
+            throw new DaoException("To-one property 'id_year' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.year = year;
+            id_year = year.getId();
+            year__resolvedKey = id_year;
+        }
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
@@ -108,10 +135,6 @@ public class NewsCategory {
     }
 
     // KEEP METHODS - put your custom methods here
-    @Override
-    public String toString() {
-        return title;
-    }
     // KEEP METHODS END
 
 }

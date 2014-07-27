@@ -40,11 +40,14 @@ import com.hd.snscoins.core.News;
 import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
+import com.hd.snscoins.utils.ImageUtils;
 import com.hd.snscoins.webentities.WeNews;
 import com.hd.snscoins.webentities.WeSyncData;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 @EActivity(R.layout.activity_events)
 public class NewsActivity extends Activity implements OnRefreshListener {
@@ -181,7 +184,36 @@ public class NewsActivity extends Activity implements OnRefreshListener {
             String photoPath = news.getImg_path();
 
             viewHolder.name.setText(coinName);
-            imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
+            if (photoPath.equals("")) {
+                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", viewHolder.photo, options, new ImageLoadingListener() {
+
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //Save the image in file system.
+                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
+                        news.setImg_path(image);
+                        news.update();
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                });
+            }
+            else {
+                imageLoader.displayImage("file://" +  photoPath, viewHolder.photo, options);
+            }
 
             convertView.setOnClickListener(new OnClickListener() {
 

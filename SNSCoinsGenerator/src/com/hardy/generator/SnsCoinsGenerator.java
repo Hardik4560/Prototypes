@@ -63,13 +63,31 @@ public class SnsCoinsGenerator {
         ToMany coinTypeToCoin = sub_type.addToMany(coin, coin_sub_type_id);
         coinTypeToCoin.setName("coinList");
 
-        /* //Create the year, product will have the list of year and each year should have list of mint.
-         Entity year = schema.addEntity("Year");
-         year.setTableName(SnsDatabase.TABLE_YEAR);
-         year.addIdProperty();
-         year.addStringProperty("year");*/
+        //Create the year, product will have the list of year and each year should have list of mint.
+        Entity year = schema.addEntity("Year");
+        year.setTableName(SnsDatabase.TABLE_YEAR);
+        year.addIdProperty();
+        year.addStringProperty("title");
 
         // add the relation.
+        Property year_coin_id = year.addLongProperty("id_coin").notNull().getProperty();
+        year.addToOne(coin, year_coin_id);
+
+        ToMany coinToYears = coin.addToMany(year, year_coin_id);
+        coinToYears.setName("yearList");
+
+        //Create the year, product will have the list of year and each year should have list of mint.
+        Entity mint = schema.addEntity("Mint");
+        mint.setTableName(SnsDatabase.TABLE_MINT);
+        mint.addIdProperty();
+        mint.addStringProperty("title");
+        mint.addIntProperty("rare");
+
+        Property mint_year_id = mint.addLongProperty("id_year").notNull().getProperty();
+        mint.addToOne(year, mint_year_id);
+
+        ToMany yearToMint = year.addToMany(mint, mint_year_id);
+        yearToMint.setName("mintList");
     }
 
     private static void addEvents(Schema schema) {

@@ -116,7 +116,6 @@ public class NewsDetailsActivity extends Activity {
 
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                        // TODO Auto-generated method stub
 
                     }
 
@@ -130,7 +129,6 @@ public class NewsDetailsActivity extends Activity {
 
                     @Override
                     public void onLoadingCancelled(String imageUri, View view) {
-                        // TODO Auto-generated method stub
 
                     }
                 });

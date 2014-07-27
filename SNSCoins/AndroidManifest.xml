@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".ui.CurrenciesActivity_" >
         </activity>
+        <activity android:name=".ui.ProductDetailActivity_" >
+        </activity>        
         <activity android:name=".ui.EventsActivity_" >
         </activity>
         <activity android:name=".ui.EventDetailsActivity_" >

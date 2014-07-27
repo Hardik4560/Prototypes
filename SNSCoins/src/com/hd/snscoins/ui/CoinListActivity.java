@@ -7,13 +7,13 @@ import java.util.List;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -26,6 +26,7 @@ import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Coin;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.utils.ImageUtils;
+import com.hd.snscoins.utils.SnsKeyConstants.ImageTypes;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -40,17 +41,15 @@ public class CoinListActivity extends ListActivity {
 
     CoinSubType subType;
 
+    private SnSCoreSystem mAppContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-
-        }
-        else {
-            subType = ((SnSCoreSystem) getApplicationContext()).getTransientSubType();
-            ((SnSCoreSystem) getApplicationContext()).setTransientSubType(null);
-        }
+        mAppContext = ((SnSCoreSystem) getApplicationContext());
+        subType = mAppContext.getTransientSubType();
+        mAppContext.setTransientSubType(null);
     }
 
     @AfterViews
@@ -125,8 +124,8 @@ public class CoinListActivity extends ListActivity {
             viewHolder.name.setText(coinName);
 
             if (photoPath.equals("")) {
-                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", viewHolder.photo, options);
-                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", viewHolder.photo, options, new ImageLoadingListener() {
+
+                imageLoader.displayImage(ImageTypes.product_image.getImageUrl(coin.getId()), viewHolder.photo, options, new ImageLoadingListener() {
 
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
@@ -153,10 +152,20 @@ public class CoinListActivity extends ListActivity {
                 });
             }
             else {
-                ContextWrapper cw = new ContextWrapper(getApplicationContext());
-                
-                imageLoader.displayImage("file://" +  photoPath, viewHolder.photo, options);
+                imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
             }
+
+            //Set the onclick listener
+            convertView.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    mAppContext.setTransientProduct(coin);
+                    Intent intent = new Intent(getApplicationContext(), ProductDetailActivity_.class);
+                    startActivity(intent);
+                }
+            });
+
             return convertView;
         }
 
@@ -166,7 +175,7 @@ public class CoinListActivity extends ListActivity {
         }
     }
 
-    public static class ViewHolder {
+    private static class ViewHolder {
         TextView name;
         ImageView photo;
     }

@@ -11,6 +11,8 @@ import de.greenrobot.dao.identityscope.IdentityScopeType;
 import com.hd.snscoins.core.CoinTypeDao;
 import com.hd.snscoins.core.CoinSubTypeDao;
 import com.hd.snscoins.core.CoinDao;
+import com.hd.snscoins.core.YearDao;
+import com.hd.snscoins.core.MintDao;
 import com.hd.snscoins.core.EventsDao;
 import com.hd.snscoins.core.NewsCategoryDao;
 import com.hd.snscoins.core.NewsDao;
@@ -27,6 +29,8 @@ public class DaoMaster extends AbstractDaoMaster {
         CoinTypeDao.createTable(db, ifNotExists);
         CoinSubTypeDao.createTable(db, ifNotExists);
         CoinDao.createTable(db, ifNotExists);
+        YearDao.createTable(db, ifNotExists);
+        MintDao.createTable(db, ifNotExists);
         EventsDao.createTable(db, ifNotExists);
         NewsCategoryDao.createTable(db, ifNotExists);
         NewsDao.createTable(db, ifNotExists);
@@ -37,6 +41,8 @@ public class DaoMaster extends AbstractDaoMaster {
         CoinTypeDao.dropTable(db, ifExists);
         CoinSubTypeDao.dropTable(db, ifExists);
         CoinDao.dropTable(db, ifExists);
+        YearDao.dropTable(db, ifExists);
+        MintDao.dropTable(db, ifExists);
         EventsDao.dropTable(db, ifExists);
         NewsCategoryDao.dropTable(db, ifExists);
         NewsDao.dropTable(db, ifExists);
@@ -74,6 +80,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(CoinTypeDao.class);
         registerDaoClass(CoinSubTypeDao.class);
         registerDaoClass(CoinDao.class);
+        registerDaoClass(YearDao.class);
+        registerDaoClass(MintDao.class);
         registerDaoClass(EventsDao.class);
         registerDaoClass(NewsCategoryDao.class);
         registerDaoClass(NewsDao.class);

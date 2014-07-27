@@ -12,6 +12,8 @@ import de.greenrobot.dao.internal.DaoConfig;
 import com.hd.snscoins.core.CoinType;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.core.Coin;
+import com.hd.snscoins.core.Year;
+import com.hd.snscoins.core.Mint;
 import com.hd.snscoins.core.Events;
 import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.core.News;
@@ -19,6 +21,8 @@ import com.hd.snscoins.core.News;
 import com.hd.snscoins.core.CoinTypeDao;
 import com.hd.snscoins.core.CoinSubTypeDao;
 import com.hd.snscoins.core.CoinDao;
+import com.hd.snscoins.core.YearDao;
+import com.hd.snscoins.core.MintDao;
 import com.hd.snscoins.core.EventsDao;
 import com.hd.snscoins.core.NewsCategoryDao;
 import com.hd.snscoins.core.NewsDao;
@@ -35,6 +39,8 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig coinTypeDaoConfig;
     private final DaoConfig coinSubTypeDaoConfig;
     private final DaoConfig coinDaoConfig;
+    private final DaoConfig yearDaoConfig;
+    private final DaoConfig mintDaoConfig;
     private final DaoConfig eventsDaoConfig;
     private final DaoConfig newsCategoryDaoConfig;
     private final DaoConfig newsDaoConfig;
@@ -42,6 +48,8 @@ public class DaoSession extends AbstractDaoSession {
     private final CoinTypeDao coinTypeDao;
     private final CoinSubTypeDao coinSubTypeDao;
     private final CoinDao coinDao;
+    private final YearDao yearDao;
+    private final MintDao mintDao;
     private final EventsDao eventsDao;
     private final NewsCategoryDao newsCategoryDao;
     private final NewsDao newsDao;
@@ -59,6 +67,12 @@ public class DaoSession extends AbstractDaoSession {
         coinDaoConfig = daoConfigMap.get(CoinDao.class).clone();
         coinDaoConfig.initIdentityScope(type);
 
+        yearDaoConfig = daoConfigMap.get(YearDao.class).clone();
+        yearDaoConfig.initIdentityScope(type);
+
+        mintDaoConfig = daoConfigMap.get(MintDao.class).clone();
+        mintDaoConfig.initIdentityScope(type);
+
         eventsDaoConfig = daoConfigMap.get(EventsDao.class).clone();
         eventsDaoConfig.initIdentityScope(type);
 
@@ -71,6 +85,8 @@ public class DaoSession extends AbstractDaoSession {
         coinTypeDao = new CoinTypeDao(coinTypeDaoConfig, this);
         coinSubTypeDao = new CoinSubTypeDao(coinSubTypeDaoConfig, this);
         coinDao = new CoinDao(coinDaoConfig, this);
+        yearDao = new YearDao(yearDaoConfig, this);
+        mintDao = new MintDao(mintDaoConfig, this);
         eventsDao = new EventsDao(eventsDaoConfig, this);
         newsCategoryDao = new NewsCategoryDao(newsCategoryDaoConfig, this);
         newsDao = new NewsDao(newsDaoConfig, this);
@@ -78,6 +94,8 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(CoinType.class, coinTypeDao);
         registerDao(CoinSubType.class, coinSubTypeDao);
         registerDao(Coin.class, coinDao);
+        registerDao(Year.class, yearDao);
+        registerDao(Mint.class, mintDao);
         registerDao(Events.class, eventsDao);
         registerDao(NewsCategory.class, newsCategoryDao);
         registerDao(News.class, newsDao);
@@ -87,6 +105,8 @@ public class DaoSession extends AbstractDaoSession {
         coinTypeDaoConfig.getIdentityScope().clear();
         coinSubTypeDaoConfig.getIdentityScope().clear();
         coinDaoConfig.getIdentityScope().clear();
+        yearDaoConfig.getIdentityScope().clear();
+        mintDaoConfig.getIdentityScope().clear();
         eventsDaoConfig.getIdentityScope().clear();
         newsCategoryDaoConfig.getIdentityScope().clear();
         newsDaoConfig.getIdentityScope().clear();
@@ -102,6 +122,14 @@ public class DaoSession extends AbstractDaoSession {
 
     public CoinDao getCoinDao() {
         return coinDao;
+    }
+
+    public YearDao getYearDao() {
+        return yearDao;
+    }
+
+    public MintDao getMintDao() {
+        return mintDao;
     }
 
     public EventsDao getEventsDao() {

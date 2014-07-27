@@ -20,6 +20,7 @@ public class SnsDatabase {
     public static final String TABLE_COIN_TYPE = "type";
     public static final String TABLE_COIN_SUB_TYPE = "sub_type";
 	public static final String TABLE_YEAR = "year";
+	public static final String TABLE_MINT = "mint";
 	
 	public static final String TABLE_EVENTS = "events";
 	public static final String TABLE_NEWS_TYPE = "news_type";

@@ -9,40 +9,45 @@ import de.greenrobot.dao.DaoException;
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
 /**
- * Entity mapped to table news_type.
+ * Entity mapped to table year.
  */
-public class NewsCategory {
+public class Year {
 
     private Long id;
     private String title;
+    private long id_coin;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
 
     /** Used for active entity operations. */
-    private transient NewsCategoryDao myDao;
+    private transient YearDao myDao;
 
-    private List<News> newsList;
+    private Coin coin;
+    private Long coin__resolvedKey;
+
+    private List<Mint> mintList;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
 
-    public NewsCategory() {
+    public Year() {
     }
 
-    public NewsCategory(Long id) {
+    public Year(Long id) {
         this.id = id;
     }
 
-    public NewsCategory(Long id, String title) {
+    public Year(Long id, String title, long id_coin) {
         this.id = id;
         this.title = title;
+        this.id_coin = id_coin;
     }
 
     /** called by internal mechanisms, do not call yourself. */
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getNewsCategoryDao() : null;
+        myDao = daoSession != null ? daoSession.getYearDao() : null;
     }
 
     public Long getId() {
@@ -61,26 +66,62 @@ public class NewsCategory {
         this.title = title;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<News> getNewsList() {
-        if (newsList == null) {
+    public long getId_coin() {
+        return id_coin;
+    }
+
+    public void setId_coin(long id_coin) {
+        this.id_coin = id_coin;
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public Coin getCoin() {
+        long __key = this.id_coin;
+        if (coin__resolvedKey == null || !coin__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            NewsDao targetDao = daoSession.getNewsDao();
-            List<News> newsListNew = targetDao._queryNewsCategory_NewsList(id);
+            CoinDao targetDao = daoSession.getCoinDao();
+            Coin coinNew = targetDao.load(__key);
             synchronized (this) {
-                if(newsList == null) {
-                    newsList = newsListNew;
+                coin = coinNew;
+            	coin__resolvedKey = __key;
+            }
+        }
+        return coin;
+    }
+
+    public void setCoin(Coin coin) {
+        if (coin == null) {
+            throw new DaoException("To-one property 'id_coin' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.coin = coin;
+            id_coin = coin.getId();
+            coin__resolvedKey = id_coin;
+        }
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<Mint> getMintList() {
+        if (mintList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            MintDao targetDao = daoSession.getMintDao();
+            List<Mint> mintListNew = targetDao._queryYear_MintList(id);
+            synchronized (this) {
+                if(mintList == null) {
+                    mintList = mintListNew;
                 }
             }
         }
-        return newsList;
+        return mintList;
     }
 
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetNewsList() {
-        newsList = null;
+    public synchronized void resetMintList() {
+        mintList = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
@@ -108,10 +149,6 @@ public class NewsCategory {
     }
 
     // KEEP METHODS - put your custom methods here
-    @Override
-    public String toString() {
-        return title;
-    }
     // KEEP METHODS END
 
 }

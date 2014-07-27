@@ -7,14 +7,19 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;
+import com.hd.snscoins.db.SnsDatabase;
+import com.hd.snscoins.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -87,8 +92,37 @@ public class EventDetailsActivity extends Activity {
             txtDescription.setText(Html.fromHtml(event.getDetails()));
 
             String photoPath = event.getImg_path();
+            
+            if (photoPath.equals("")) {
+                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", imgView, options, new ImageLoadingListener() {
 
-            imageLoader.displayImage("file://" + photoPath, imgView, options);
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //Save the image in file system.
+                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
+                        event.setImg_path(image);
+                        SnsDatabase.session().update(event);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                });
+            }
+            else {
+                imageLoader.displayImage("file://" +  photoPath, imgView, options);
+            }
         }
     }
 }

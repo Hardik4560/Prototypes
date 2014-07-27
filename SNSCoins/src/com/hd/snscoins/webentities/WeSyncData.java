@@ -27,12 +27,12 @@ public class WeSyncData {
         this.sub_category = sub_category;
     }
 
-    public List<WeProduct> getProducts() {
+    public List<WeProduct> getProduct() {
         return product;
     }
 
-    public void setProducts(List<WeProduct> products) {
-        this.product = products;
+    public void setProduct(List<WeProduct> product) {
+        this.product = product;
     }
 
     public List<WeEvent> getEvent() {
@@ -58,5 +58,4 @@ public class WeSyncData {
     public void setNews_category(List<WeNewsCategory> news_category) {
         this.news_category = news_category;
     }
-
 }

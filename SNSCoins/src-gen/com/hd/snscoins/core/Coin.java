@@ -1,5 +1,6 @@
 package com.hd.snscoins.core;
 
+import java.util.List;
 import com.hd.snscoins.core.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -27,6 +28,7 @@ public class Coin {
     private CoinSubType coinSubType;
     private Long coinSubType__resolvedKey;
 
+    private List<Year> yearList;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -111,6 +113,28 @@ public class Coin {
             id_sub_type = coinSubType.getId();
             coinSubType__resolvedKey = id_sub_type;
         }
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<Year> getYearList() {
+        if (yearList == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            YearDao targetDao = daoSession.getYearDao();
+            List<Year> yearListNew = targetDao._queryCoin_YearList(id);
+            synchronized (this) {
+                if(yearList == null) {
+                    yearList = yearListNew;
+                }
+            }
+        }
+        return yearList;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetYearList() {
+        yearList = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
