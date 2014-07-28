@@ -18,8 +18,9 @@ public class News {
     private String date;
     private String time;
     private String details;
-    private String img_path;
     private long id_category;
+    private String image_url;
+    private String image_path;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -41,14 +42,15 @@ public class News {
         this.id = id;
     }
 
-    public News(Long id, String title, String date, String time, String details, String img_path, long id_category) {
+    public News(Long id, String title, String date, String time, String details, long id_category, String image_url, String image_path) {
         this.id = id;
         this.title = title;
         this.date = date;
         this.time = time;
         this.details = details;
-        this.img_path = img_path;
         this.id_category = id_category;
+        this.image_url = image_url;
+        this.image_path = image_path;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -99,20 +101,28 @@ public class News {
         this.details = details;
     }
 
-    public String getImg_path() {
-        return img_path;
-    }
-
-    public void setImg_path(String img_path) {
-        this.img_path = img_path;
-    }
-
     public long getId_category() {
         return id_category;
     }
 
     public void setId_category(long id_category) {
         this.id_category = id_category;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
     }
 
     /** To-one relationship, resolved on first access. */

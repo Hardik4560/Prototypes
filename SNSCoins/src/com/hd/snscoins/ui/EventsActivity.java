@@ -87,7 +87,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
                 mListViewContainer.setEnabled(topRowVerticalPosition >= 0);
             }
         });
-        
+
         loadData();
     }
 
@@ -162,7 +162,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
 
             final Events event = getItem(position);
             String coinName = event.getTitle();
-            String photoPath = event.getImg_path();
+            String photoPath = event.getImage_path();
 
             viewHolder.name.setText(coinName);
             imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
@@ -247,10 +247,11 @@ public class EventsActivity extends Activity implements OnRefreshListener {
             for (int i = 0; i < syncDataEvents.getEvent().size(); i++) {
                 WeEvent weEvent = syncDataEvents.getEvent().get(i);
 
-                Events event = new Events(weEvent.getId(), weEvent.getEvent_title()
+                Events event = new Events(
+                        weEvent.getId(), weEvent.getEvent_title()
                         , weEvent.getEvent_start_date(), weEvent.getEvent_start_time()
                         , weEvent.getEvent_end_date(), weEvent.getEvent_end_time()
-                        , weEvent.getEvent_venue(), weEvent.getEvent_details(), ""
+                        , weEvent.getEvent_venue(), weEvent.getEvent_details(), "", weEvent.getImage_url()
                                );
                 SnsDatabase.session().getEventsDao().insert(event);
             }

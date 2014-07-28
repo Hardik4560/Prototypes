@@ -76,7 +76,7 @@ public class SnsFixtureDataCreator {
             String coinName = names[0].trim();
             Long coinSubTypeId = Long.valueOf(names[2].trim());
 
-            Coin coin = new Coin(coinCount, coinName, "", coinSubTypeId);
+            Coin coin = new Coin(coinCount, coinName, "", "", coinSubTypeId);
             SnsDatabase.session().getCoinDao().insert(coin);
 
             coinCount++;

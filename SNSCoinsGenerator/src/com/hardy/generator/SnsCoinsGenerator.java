@@ -51,7 +51,9 @@ public class SnsCoinsGenerator {
         coin.setTableName(SnsDatabase.TABLE_COIN);
         coin.addIdProperty();
         coin.addStringProperty("name").notNull();
-        coin.addStringProperty("icon_location");
+
+        coin.addStringProperty("image_url");
+        coin.addStringProperty("image_path");
 
         /* //Relation with coinType
          Property coin_type_id = coin.addLongProperty("id_type").notNull().getProperty();
@@ -91,18 +93,18 @@ public class SnsCoinsGenerator {
     }
 
     private static void addEvents(Schema schema) {
-        Entity type = schema.addEntity("Events");
-        type.setTableName(SnsDatabase.TABLE_EVENTS); // "ORDER" is a reserved keyword
-        type.addIdProperty();
-        type.addStringProperty("title").notNull();
-        type.addStringProperty("start_date");
-        type.addStringProperty("start_time");
-        type.addStringProperty("end_date");
-        type.addStringProperty("end_time");
-        type.addStringProperty("venue");
-        type.addStringProperty("details");
-
-        type.addStringProperty("img_path");
+        Entity event = schema.addEntity("Events");
+        event.setTableName(SnsDatabase.TABLE_EVENTS); // "ORDER" is a reserved keyword
+        event.addIdProperty();
+        event.addStringProperty("title").notNull();
+        event.addStringProperty("start_date");
+        event.addStringProperty("start_time");
+        event.addStringProperty("end_date");
+        event.addStringProperty("end_time");
+        event.addStringProperty("venue");
+        event.addStringProperty("details");
+        event.addStringProperty("image_url");
+        event.addStringProperty("image_path");
     }
 
     private static void addNews(Schema schema) {
@@ -120,12 +122,13 @@ public class SnsCoinsGenerator {
         news.addStringProperty("time");
         news.addStringProperty("details");
 
-        news.addStringProperty("img_path");
-
         Property news_category_id = news.addLongProperty("id_category").notNull().getProperty();
         news.addToOne(type, news_category_id);
 
         ToMany categoryToNew = type.addToMany(news, news_category_id);
         categoryToNew.setName("newsList");
+
+        news.addStringProperty("image_url");
+        news.addStringProperty("image_path");
     }
 }

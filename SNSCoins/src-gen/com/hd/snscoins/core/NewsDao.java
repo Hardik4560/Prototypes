@@ -33,8 +33,9 @@ public class NewsDao extends AbstractDao<News, Long> {
         public final static Property Date = new Property(2, String.class, "date", false, "DATE");
         public final static Property Time = new Property(3, String.class, "time", false, "TIME");
         public final static Property Details = new Property(4, String.class, "details", false, "DETAILS");
-        public final static Property Img_path = new Property(5, String.class, "img_path", false, "IMG_PATH");
-        public final static Property Id_category = new Property(6, long.class, "id_category", false, "ID_CATEGORY");
+        public final static Property Id_category = new Property(5, long.class, "id_category", false, "ID_CATEGORY");
+        public final static Property Image_url = new Property(6, String.class, "image_url", false, "IMAGE_URL");
+        public final static Property Image_path = new Property(7, String.class, "image_path", false, "IMAGE_PATH");
     };
 
     private DaoSession daoSession;
@@ -59,8 +60,9 @@ public class NewsDao extends AbstractDao<News, Long> {
                 "'DATE' TEXT," + // 2: date
                 "'TIME' TEXT," + // 3: time
                 "'DETAILS' TEXT," + // 4: details
-                "'IMG_PATH' TEXT," + // 5: img_path
-                "'ID_CATEGORY' INTEGER NOT NULL );"); // 6: id_category
+                "'ID_CATEGORY' INTEGER NOT NULL ," + // 5: id_category
+                "'IMAGE_URL' TEXT," + // 6: image_url
+                "'IMAGE_PATH' TEXT);"); // 7: image_path
     }
 
     /** Drops the underlying database table. */
@@ -94,12 +96,17 @@ public class NewsDao extends AbstractDao<News, Long> {
         if (details != null) {
             stmt.bindString(5, details);
         }
+        stmt.bindLong(6, entity.getId_category());
  
-        String img_path = entity.getImg_path();
-        if (img_path != null) {
-            stmt.bindString(6, img_path);
+        String image_url = entity.getImage_url();
+        if (image_url != null) {
+            stmt.bindString(7, image_url);
         }
-        stmt.bindLong(7, entity.getId_category());
+ 
+        String image_path = entity.getImage_path();
+        if (image_path != null) {
+            stmt.bindString(8, image_path);
+        }
     }
 
     @Override
@@ -123,8 +130,9 @@ public class NewsDao extends AbstractDao<News, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // date
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // time
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // details
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // img_path
-            cursor.getLong(offset + 6) // id_category
+            cursor.getLong(offset + 5), // id_category
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // image_url
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // image_path
         );
         return entity;
     }
@@ -137,8 +145,9 @@ public class NewsDao extends AbstractDao<News, Long> {
         entity.setDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setTime(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setDetails(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setImg_path(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setId_category(cursor.getLong(offset + 6));
+        entity.setId_category(cursor.getLong(offset + 5));
+        entity.setImage_url(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setImage_path(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     /** @inheritdoc */

@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/lnrContentTop"
-        android:layout_width="match_parent" 
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="40"
         android:orientation="horizontal" >
@@ -64,12 +64,36 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lst_years"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_10dp"
-        android:layout_weight="60" >
-    </ListView>
+        android:layout_weight="60"
+        android:gravity="center" >
+
+        <ListView
+            android:id="@+id/lst_years"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_10dp" >
+        </ListView>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <Button
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50dp"
+            android:layout_centerInParent="true"
+            android:onClick="onRetry"
+            android:paddingLeft="@dimen/_40dp"
+            android:paddingRight="@dimen/_40dp"
+            android:text="Retry"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </LinearLayout>

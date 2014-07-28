@@ -103,11 +103,11 @@ public class NewsDetailsActivity extends Activity {
 
             txtDescription.setText(news.getDetails());
 
-            String photoPath = news.getImg_path();
+            String photoPath = news.getImage_url();
 
             if (photoPath.equals("")) {
-                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", imgView, options);
-                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", imgView, options, new ImageLoadingListener() {
+                String url = news.getImage_url();
+                imageLoader.displayImage(url, imgView, options, new ImageLoadingListener() {
 
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
@@ -122,8 +122,7 @@ public class NewsDetailsActivity extends Activity {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
-                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
-                        news.setImg_path(image);
+                        news.setImage_path(imageUri);
                         news.update();
                     }
 
@@ -137,5 +136,5 @@ public class NewsDetailsActivity extends Activity {
                 imageLoader.displayImage("file://" + photoPath, imgView, options);
             }
         }
-    }   
+    }
 }

@@ -16,7 +16,8 @@ public class Coin {
     private Long id;
     /** Not-null value. */
     private String name;
-    private String icon_location;
+    private String image_url;
+    private String image_path;
     private long id_sub_type;
 
     /** Used to resolve relations */
@@ -40,10 +41,11 @@ public class Coin {
         this.id = id;
     }
 
-    public Coin(Long id, String name, String icon_location, long id_sub_type) {
+    public Coin(Long id, String name, String image_url, String image_path, long id_sub_type) {
         this.id = id;
         this.name = name;
-        this.icon_location = icon_location;
+        this.image_url = image_url;
+        this.image_path = image_path;
         this.id_sub_type = id_sub_type;
     }
 
@@ -71,12 +73,20 @@ public class Coin {
         this.name = name;
     }
 
-    public String getIcon_location() {
-        return icon_location;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setIcon_location(String icon_location) {
-        this.icon_location = icon_location;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
     }
 
     public long getId_sub_type() {

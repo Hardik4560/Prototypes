@@ -9,6 +9,15 @@ public class WeNews {
     String news_date;
     String news_time;
     String news_details;
+    String image_url;
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
 
     public Long getId() {
         return id;
