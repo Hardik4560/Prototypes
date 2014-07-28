@@ -38,6 +38,7 @@ import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
+import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeEvent;
 import com.hd.snscoins.webentities.WeSyncData;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -195,10 +196,9 @@ public class EventsActivity extends Activity implements OnRefreshListener {
     @Override
     public void onRefresh() {
         try {
-            final String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_all_events.php";
 
             RequestFuture<JSONObject> futureEvents = RequestFuture.newFuture();
-            JsonObjectRequest requestEvents = new JsonObjectRequest(GET_EVENTS_URL, new JSONObject(), futureEvents, futureEvents);
+            JsonObjectRequest requestEvents = new JsonObjectRequest(UrlConstants.GET_EVENTS_URL, new JSONObject(), futureEvents, futureEvents);
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

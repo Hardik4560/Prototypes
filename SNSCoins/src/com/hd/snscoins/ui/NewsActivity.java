@@ -184,7 +184,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
             String photoPath = news.getImage_path();
 
             viewHolder.name.setText(coinName);
-            if (photoPath.equals("")) {
+            if (photoPath == null || photoPath.equals("")) {
                 String url = news.getImage_url();
                 imageLoader.displayImage(url, viewHolder.photo, options, new ImageLoadingListener() {
 

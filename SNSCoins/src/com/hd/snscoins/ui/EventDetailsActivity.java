@@ -92,7 +92,7 @@ public class EventDetailsActivity extends Activity {
             txtDescription.setText(Html.fromHtml(event.getDetails()));
 
             String photoPath = event.getImage_path();
-            if (photoPath.equals("")) {
+            if (photoPath == null || photoPath.equals("")) {
                 String url = event.getImage_url();
                 imageLoader.displayImage(url, imgView, options, new ImageLoadingListener() {
 

@@ -122,7 +122,7 @@ public class CoinListActivity extends ListActivity {
 
             viewHolder.name.setText(coinName);
 
-            if (photoPath.equals("")) {
+            if (photoPath == null || photoPath.equals("")) {
                 //String url = ImageTypes.product_image.getImageUrl(coin.getId());
                 String url = coin.getImage_url();
                 imageLoader.displayImage(url, viewHolder.photo, options, new ImageLoadingListener() {

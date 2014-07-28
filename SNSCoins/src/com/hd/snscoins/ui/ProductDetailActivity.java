@@ -40,6 +40,7 @@ import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
 import com.hd.snscoins.utils.ImageUtils;
 import com.hd.snscoins.utils.SnsKeyConstants.ImageTypes;
+import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeProduct;
 import com.hd.snscoins.webentities.WeProduct.WeMint;
 import com.hd.snscoins.webentities.WeProduct.WeYear;
@@ -223,7 +224,6 @@ public class ProductDetailActivity extends Activity {
     }
 
     private class GetDetailsLoader extends AsyncTask<Void, Void, Boolean> {
-        private final String GET_PRODUCT_DETAIL = "http://demo.iccgnews.com/mobile/get_product.php?id=" + mCoin.getId();
 
         @Override
         protected void onPreExecute() {
@@ -241,7 +241,7 @@ public class ProductDetailActivity extends Activity {
 
             RequestFuture<JSONObject> futureYears = RequestFuture.newFuture();
 
-            JsonObjectRequest requestYears = new JsonObjectRequest(GET_PRODUCT_DETAIL, new JSONObject(), futureYears, futureYears);
+            JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL + mCoin.getId(), new JSONObject(), futureYears, futureYears);
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
