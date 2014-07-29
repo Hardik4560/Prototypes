@@ -26,7 +26,6 @@ import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Coin;
 import com.hd.snscoins.core.CoinSubType;
 import com.hd.snscoins.utils.ImageUtils;
-import com.hd.snscoins.utils.SnsKeyConstants.ImageTypes;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -119,13 +118,14 @@ public class CoinListActivity extends ListActivity {
 
             final Coin coin = getItem(position);
             String coinName = coin.getName();
-            String photoPath = coin.getIcon_location();
+            String photoPath = coin.getImage_path();
 
             viewHolder.name.setText(coinName);
 
-            if (photoPath.equals("")) {
-
-                imageLoader.displayImage(ImageTypes.product_image.getImageUrl(coin.getId()), viewHolder.photo, options, new ImageLoadingListener() {
+            if (photoPath == null || photoPath.equals("")) {
+                //String url = ImageTypes.product_image.getImageUrl(coin.getId());
+                String url = coin.getImage_url();
+                imageLoader.displayImage(url, viewHolder.photo, options, new ImageLoadingListener() {
 
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
@@ -140,8 +140,7 @@ public class CoinListActivity extends ListActivity {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
-                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
-                        coin.setIcon_location(image);
+                        coin.setImage_path(imageUri);
                         coin.update();
                     }
 

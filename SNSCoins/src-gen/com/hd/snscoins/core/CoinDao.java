@@ -30,8 +30,9 @@ public class CoinDao extends AbstractDao<Coin, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Icon_location = new Property(2, String.class, "icon_location", false, "ICON_LOCATION");
-        public final static Property Id_sub_type = new Property(3, long.class, "id_sub_type", false, "ID_SUB_TYPE");
+        public final static Property Image_url = new Property(2, String.class, "image_url", false, "IMAGE_URL");
+        public final static Property Image_path = new Property(3, String.class, "image_path", false, "IMAGE_PATH");
+        public final static Property Id_sub_type = new Property(4, long.class, "id_sub_type", false, "ID_SUB_TYPE");
     };
 
     private DaoSession daoSession;
@@ -53,8 +54,9 @@ public class CoinDao extends AbstractDao<Coin, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'product' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'NAME' TEXT NOT NULL ," + // 1: name
-                "'ICON_LOCATION' TEXT," + // 2: icon_location
-                "'ID_SUB_TYPE' INTEGER NOT NULL );"); // 3: id_sub_type
+                "'IMAGE_URL' TEXT," + // 2: image_url
+                "'IMAGE_PATH' TEXT," + // 3: image_path
+                "'ID_SUB_TYPE' INTEGER NOT NULL );"); // 4: id_sub_type
     }
 
     /** Drops the underlying database table. */
@@ -74,11 +76,16 @@ public class CoinDao extends AbstractDao<Coin, Long> {
         }
         stmt.bindString(2, entity.getName());
  
-        String icon_location = entity.getIcon_location();
-        if (icon_location != null) {
-            stmt.bindString(3, icon_location);
+        String image_url = entity.getImage_url();
+        if (image_url != null) {
+            stmt.bindString(3, image_url);
         }
-        stmt.bindLong(4, entity.getId_sub_type());
+ 
+        String image_path = entity.getImage_path();
+        if (image_path != null) {
+            stmt.bindString(4, image_path);
+        }
+        stmt.bindLong(5, entity.getId_sub_type());
     }
 
     @Override
@@ -99,8 +106,9 @@ public class CoinDao extends AbstractDao<Coin, Long> {
         Coin entity = new Coin( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // icon_location
-            cursor.getLong(offset + 3) // id_sub_type
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // image_url
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // image_path
+            cursor.getLong(offset + 4) // id_sub_type
         );
         return entity;
     }
@@ -110,8 +118,9 @@ public class CoinDao extends AbstractDao<Coin, Long> {
     public void readEntity(Cursor cursor, Coin entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
-        entity.setIcon_location(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setId_sub_type(cursor.getLong(offset + 3));
+        entity.setImage_url(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setImage_path(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setId_sub_type(cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

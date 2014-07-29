@@ -31,6 +31,7 @@ import com.hd.snscoins.core.CoinType;
 import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
+import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeCategory;
 import com.hd.snscoins.webentities.WeNewsCategory;
 import com.hd.snscoins.webentities.WeProduct;
@@ -67,9 +68,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private class SyncCallLoader extends AsyncTask<Void, Void, Boolean> {
-        private final String GET_COINS_URL = "http://demo.iccgnews.com/mobile/get_coins.php";
-        private final String GET_CURRENCIES_URL = "http://demo.iccgnews.com/mobile/get_currencies.php";
-        private final String GET_NEWS_CATEGORY_URL = "http://demo.iccgnews.com/mobile/get_news_category_title.php";
 
         @Override
         protected void onPreExecute() {
@@ -93,9 +91,9 @@ public class SplashScreenActivity extends Activity {
             RequestFuture<JSONObject> futureCurrencies = RequestFuture.newFuture();
             RequestFuture<JSONObject> futureNewsCategory = RequestFuture.newFuture();
 
-            JsonObjectRequest requestCoins = new JsonObjectRequest(GET_COINS_URL, new JSONObject(), futureCoins, futureCoins);
-            JsonObjectRequest requestCurrencies = new JsonObjectRequest(GET_CURRENCIES_URL, new JSONObject(), futureCurrencies, futureCurrencies);
-            JsonObjectRequest requestNews = new JsonObjectRequest(GET_NEWS_CATEGORY_URL, new JSONObject(), futureNewsCategory, futureNewsCategory);
+            JsonObjectRequest requestCoins = new JsonObjectRequest(UrlConstants.GET_COINS_URL, new JSONObject(), futureCoins, futureCoins);
+            JsonObjectRequest requestCurrencies = new JsonObjectRequest(UrlConstants.GET_CURRENCIES_URL, new JSONObject(), futureCurrencies, futureCurrencies);
+            JsonObjectRequest requestNews = new JsonObjectRequest(UrlConstants.GET_NEWS_CATEGORY_URL, new JSONObject(), futureNewsCategory, futureNewsCategory);
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -185,7 +183,7 @@ public class SplashScreenActivity extends Activity {
                 for (int i = 0; i < syncData.getProduct().size(); i++) {
                     WeProduct weProduct = syncData.getProduct().get(i);
 
-                    Coin coin = new Coin(weProduct.getProduct_id(), weProduct.getProduct_title(), "", weProduct.getSub_category_id());
+                    Coin coin = new Coin(weProduct.getProduct_id(), weProduct.getProduct_title(), "", weProduct.getProduct_image(), weProduct.getSub_category_id());
                     SnsDatabase.session().getCoinDao().insert(coin);
                 }
 

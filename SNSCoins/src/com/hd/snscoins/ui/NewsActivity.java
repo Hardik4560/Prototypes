@@ -181,11 +181,12 @@ public class NewsActivity extends Activity implements OnRefreshListener {
             final News news = getItem(position);
 
             String coinName = news.getTitle();
-            String photoPath = news.getImg_path();
+            String photoPath = news.getImage_path();
 
             viewHolder.name.setText(coinName);
-            if (photoPath.equals("")) {
-                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", viewHolder.photo, options, new ImageLoadingListener() {
+            if (photoPath == null || photoPath.equals("")) {
+                String url = news.getImage_url();
+                imageLoader.displayImage(url, viewHolder.photo, options, new ImageLoadingListener() {
 
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
@@ -201,7 +202,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
                         String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
-                        news.setImg_path(image);
+                        news.setImage_url(image);
                         news.update();
                     }
 
@@ -212,7 +213,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
                 });
             }
             else {
-                imageLoader.displayImage("file://" +  photoPath, viewHolder.photo, options);
+                imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
             }
 
             convertView.setOnClickListener(new OnClickListener() {
@@ -309,7 +310,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
 
                 News news = new News(weNews.getId(), weNews.getNews_title()
                         , weNews.getNews_date(), weNews.getNews_time()
-                        , weNews.getNews_details(), "", newsCategory.getId());
+                        , weNews.getNews_details(), newsCategory.getId(), "", weNews.getImage_url());
                 SnsDatabase.session().getNewsDao().insert(news);
             }
         }
