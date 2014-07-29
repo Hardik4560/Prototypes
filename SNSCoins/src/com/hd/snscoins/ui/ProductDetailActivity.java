@@ -8,21 +8,18 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,33 +27,23 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.hardy.utils.SharedPrefs;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
-import com.hd.snscoins.constants.SnsConstants;
 import com.hd.snscoins.core.Coin;
-import com.hd.snscoins.core.CoinSubType;
-import com.hd.snscoins.core.CoinType;
-import com.hd.snscoins.core.Events;
 import com.hd.snscoins.core.Mint;
-import com.hd.snscoins.core.News;
-import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.core.Year;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
 import com.hd.snscoins.utils.ImageUtils;
-import com.hd.snscoins.webentities.WeCategory;
-import com.hd.snscoins.webentities.WeNewsCategory;
+import com.hd.snscoins.utils.SnsKeyConstants.ImageTypes;
+import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeProduct;
 import com.hd.snscoins.webentities.WeProduct.WeMint;
 import com.hd.snscoins.webentities.WeProduct.WeYear;
-import com.hd.snscoins.webentities.WeSubCategory;
 import com.hd.snscoins.webentities.WeSyncData;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -78,6 +65,12 @@ public class ProductDetailActivity extends Activity {
 
     @ViewById(R.id.lst_years)
     ListView lstYears;
+
+    @ViewById(R.id.btnRetry)
+    Button btnRetry;
+
+    @ViewById(R.id.progress)
+    ProgressBar progressBar;
 
     private Coin mCoin;
     private SnSCoreSystem mAppContext;
@@ -112,9 +105,10 @@ public class ProductDetailActivity extends Activity {
             txtTitle.setText(mCoin.getName());
             txtCategory.setText(mCoin.getCoinSubType().getType());
 
-            String photoPath = mCoin.getIcon_location();
+            String photoPath = mCoin.getImage_path();
             if (photoPath.equals("")) {
-                imageLoader.displayImage("http://www.free-pictogram.com/wp-content/uploads/2010/10/8_dollar_0.png", imgLogo, options, new ImageLoadingListener() {
+                String url = mCoin.getImage_url();
+                imageLoader.displayImage(url, imgLogo, options, new ImageLoadingListener() {
 
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
@@ -129,8 +123,8 @@ public class ProductDetailActivity extends Activity {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
-                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
-                        mCoin.setIcon_location(image);
+                        // String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
+                        mCoin.setImage_path(imageUri);
                         SnsDatabase.session().update(mCoin);
                     }
 
@@ -146,7 +140,7 @@ public class ProductDetailActivity extends Activity {
 
             if (mCoin.getYearList().isEmpty()) {
                 //Download from server.
-                GetDetailsLoader getDetailsLoader = new GetDetailsLoader(this);
+                GetDetailsLoader getDetailsLoader = new GetDetailsLoader();
                 getDetailsLoader.execute();
             }
             else {
@@ -212,11 +206,12 @@ public class ProductDetailActivity extends Activity {
                 txt_mint.setText(mint.getTitle());
 
                 CheckBox chkBox = (CheckBox) relativeLayout.findViewById(R.id.chkbox);
+                TextView txtView = (TextView) relativeLayout.findViewById(R.id.txt_rare);
                 if (mint.getRare() == 1) {
-                    chkBox.setText("*");
+                    txtView.setVisibility(View.VISIBLE);
                 }
                 else {
-                    chkBox.setText("");
+                    txtView.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -230,19 +225,13 @@ public class ProductDetailActivity extends Activity {
     }
 
     private class GetDetailsLoader extends AsyncTask<Void, Void, Boolean> {
-        private final String GET_PRODUCT_DETAIL = "http://www.mocky.io/v2/53d512b2332dc41d0a43c96b";
-        ProgressDialog progressDialog;
-
-        public GetDetailsLoader(Context context) {
-            progressDialog = new ProgressDialog(context);
-        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
+            progressBar.setVisibility(View.VISIBLE);
+            btnRetry.setVisibility(View.GONE);
         }
 
         @Override
@@ -253,7 +242,7 @@ public class ProductDetailActivity extends Activity {
 
             RequestFuture<JSONObject> futureYears = RequestFuture.newFuture();
 
-            JsonObjectRequest requestYears = new JsonObjectRequest(GET_PRODUCT_DETAIL, new JSONObject(), futureYears, futureYears);
+            JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL + mCoin.getId(), new JSONObject(), futureYears, futureYears);
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -306,8 +295,8 @@ public class ProductDetailActivity extends Activity {
                 return true;
             }
 
-            WeProduct weProduct = syncData.getProduct().get(0);
-            List<WeYear> years = weProduct.getYear();
+            WeProduct weProduct = weProducts.get(0);
+            List<WeYear> years = weProduct.getProduct_mint();
 
             // Create some coins
             SnsDatabase.db().beginTransaction();
@@ -316,14 +305,21 @@ public class ProductDetailActivity extends Activity {
                 for (int i = 0; i < years.size(); i++) {
                     WeYear weYear = years.get(i);
 
-                    Year year = new Year(weYear.getPid(), weYear.getTitle(), mCoin.getId());
+                    Year year = new Year();
+                    year.setId_coin(mCoin.getId());
+                    year.setTitle(weYear.getYear());
+
                     SnsDatabase.session().getYearDao().insert(year);
 
-                    List<WeMint> weMintList = weYear.getMint();
+                    List<WeMint> weMintList = weYear.getMint_title();
                     for (int jMint = 0; jMint < weMintList.size(); jMint++) {
                         WeMint weMint = weMintList.get(jMint);
 
-                        Mint mint = new Mint(weMint.getPid(), weMint.getTitle(), weMint.isRare(), year.getId());
+                        Mint mint = new Mint();
+                        mint.setTitle(weMint.getTitle());
+                        mint.setRare(weMint.isRare());
+                        mint.setId_year(year.getId());
+
                         SnsDatabase.session().getMintDao().insert(mint);
                     }
                 }
@@ -344,15 +340,22 @@ public class ProductDetailActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
+            progressBar.setVisibility(View.GONE);
 
-            progressDialog.dismiss();
             if (result) {
                 //Set the adapter for the years.
                 lstYears.setAdapter(new YearAdapter(mCoin));
             }
             else {
                 ToastMaker.getInstance().createToast("Error syncing data");
+                btnRetry.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void onRetry(View v) {
+        //Download from server.
+        GetDetailsLoader getDetailsLoader = new GetDetailsLoader();
+        getDetailsLoader.execute();
     }
 }

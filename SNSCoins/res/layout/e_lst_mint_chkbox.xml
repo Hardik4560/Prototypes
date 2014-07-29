@@ -5,24 +5,33 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <CheckBox
-        android:id="@+id/chkbox"
-        android:layout_width="wrap_content"
-        android:textSize="35sp"
-        android:textColor="@color/red_ff0000"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="*" />
-
     <TextView
         android:id="@+id/txt_mint"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_60dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/chkbox"
-        android:layout_alignLeft="@id/chkbox"
-        android:layout_alignRight="@id/chkbox"
-        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/_5dp"
+        android:gravity="left"
+        android:paddingLeft="@dimen/_10dp"
         android:text="C"
         android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/chkbox"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_mint" />
+
+    <TextView
+        android:id="@+id/txt_rare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/chkbox"
+        android:layout_alignTop="@id/chkbox"
+        android:layout_toRightOf="@id/chkbox"
+        android:gravity="center"
+        android:text="*"
+        android:textColor="@color/red_ff0000"
+        android:textSize="30sp" />
 
 </RelativeLayout>

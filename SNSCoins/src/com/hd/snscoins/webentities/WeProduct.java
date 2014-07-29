@@ -75,7 +75,7 @@ public class WeProduct {
 
     public class WeMint {
         String title;
-        Integer is_rare;
+        Integer rare;
 
         public String getTitle() {
             return title;
@@ -85,13 +85,14 @@ public class WeProduct {
             this.title = title;
         }
 
-        public Integer getIs_rare() {
-            return is_rare;
+        public Integer isRare() {
+            return rare;
         }
 
-        public void setIs_rare(Integer is_rare) {
-            this.is_rare = is_rare;
+        public void setRare(Integer rare) {
+            this.rare = rare;
         }
+
     }
 
 }
