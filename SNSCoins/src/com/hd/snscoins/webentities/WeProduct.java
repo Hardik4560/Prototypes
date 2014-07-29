@@ -7,14 +7,23 @@ public class WeProduct {
     Long product_id;
     Long sub_category_id;
     String product_title;
-    List<WeYear> year;
+    List<WeYear> product_mint;
+    String product_image;
 
-    public List<WeYear> getYear() {
-        return year;
+    public String getProduct_image() {
+        return product_image;
     }
 
-    public void setYear(List<WeYear> year) {
-        this.year = year;
+    public void setProduct_image(String product_image) {
+        this.product_image = product_image;
+    }
+
+    public List<WeYear> getProduct_mint() {
+        return product_mint;
+    }
+
+    public void setProduct_mint(List<WeYear> product_mint) {
+        this.product_mint = product_mint;
     }
 
     public Long getProduct_id() {
@@ -42,49 +51,31 @@ public class WeProduct {
     }
 
     public class WeYear {
-        Long pid;
-        String title;
+        String year;
 
-        List<WeMint> mint;
+        List<WeMint> mint_title;
 
-        public String getTitle() {
-            return title;
+        public String getYear() {
+            return year;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setYear(String year) {
+            this.year = year;
         }
 
-        public List<WeMint> getMint() {
-            return mint;
+        public List<WeMint> getMint_title() {
+            return mint_title;
         }
 
-        public void setMint(List<WeMint> mint) {
-            this.mint = mint;
-        }
-
-        public Long getPid() {
-            return pid;
-        }
-
-        public void setPid(Long pid) {
-            this.pid = pid;
+        public void setMint_title(List<WeMint> mint_title) {
+            this.mint_title = mint_title;
         }
 
     }
 
     public class WeMint {
-        Long pid;
         String title;
-        Integer rare;
-
-        public Long getPid() {
-            return pid;
-        }
-
-        public void setPid(Long pid) {
-            this.pid = pid;
-        }
+        Integer is_rare;
 
         public String getTitle() {
             return title;
@@ -94,14 +85,13 @@ public class WeProduct {
             this.title = title;
         }
 
-        public Integer isRare() {
-            return rare;
+        public Integer getIs_rare() {
+            return is_rare;
         }
 
-        public void setRare(Integer rare) {
-            this.rare = rare;
+        public void setIs_rare(Integer is_rare) {
+            this.is_rare = is_rare;
         }
-
     }
 
 }
