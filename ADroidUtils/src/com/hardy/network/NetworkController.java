@@ -1,15 +1,20 @@
 
-package com.hd.snscoins.network;
+package com.hardy.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.hardy.exceptions.ObjectNotInitializedException;
+import com.hardy.logging.LogIt;
 
+/**
+ * Class that handles the networking mechanism of the application. You should {@link LogIt#initialize(Context, Class)} in your
+ * application class before using any of the methods of this class. 
+ * @author Hardik
+ */
 public class NetworkController {
     private static final String TAG = NetworkController.class.getSimpleName();
 
@@ -43,13 +48,13 @@ public class NetworkController {
         return mRequestQueue;
     }
 
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
+    public <T> void addToRequestQueue(com.android.volley.Request<T> req, String tag) {
         // set the default tag if tag is empty
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(req);
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
+    public <T> void addToRequestQueue(com.android.volley.Request<T> req) {
         // set the default tag if tag is empty
         getRequestQueue().add(req);
     }
