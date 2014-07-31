@@ -2,6 +2,7 @@
 package com.hardy.logging;
 
 import java.io.File;
+import java.util.Date;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.hardy.utils.emailutils.DroidMailer;
+import com.hardy.utils.emailutils.DroidMailer.OnMailSendListener;
 
 public class SendLogsReceiver extends BroadcastReceiver {
 
@@ -21,18 +23,18 @@ public class SendLogsReceiver extends BroadcastReceiver {
             Bundle extras = intent.getExtras();
 
             if (extras != null) {
-                String userName = intent.getStringExtra(DroidMailer.EXTRA_USERNAME);
-                String password = intent.getStringExtra(DroidMailer.EXTRA_PASSWORD);
-                String mailTo = intent.getStringExtra(DroidMailer.EXTRA_MAIL_TO);
-                String subject = intent.getStringExtra(DroidMailer.EXTRA_SUBJECT);
-                String body = intent.getStringExtra(DroidMailer.EXTRA_BODY);
+                String userName = extras.getString(DroidMailer.EXTRA_USERNAME);
+                String password = extras.getString(DroidMailer.EXTRA_PASSWORD);
+                String mailTo = extras.getString(DroidMailer.EXTRA_MAIL_TO);
+                String subject = extras.getString(DroidMailer.EXTRA_SUBJECT);
+                String body = extras.getString(DroidMailer.EXTRA_BODY);
 
                 //Send email
                 DroidMailer dm = new DroidMailer(context);
                 dm.setGmailUserName(userName);
                 dm.setGmailPassword(password);
                 dm.setMailTo(mailTo);
-                dm.setFormSubject(subject);
+                dm.setFormSubject(subject + " " + new Date().toLocaleString());
 
                 File file = LogIt.getLogFile();
                 if (file != null) {
@@ -44,6 +46,18 @@ public class SendLogsReceiver extends BroadcastReceiver {
                 }
 
                 dm.setProcessVisibility(false);
+                dm.setOnMailSendListener(new OnMailSendListener() {
+
+                    @Override
+                    public void onMailSuccessfully() {
+                        LogIt.deleteLogFile();
+                    }
+
+                    @Override
+                    public void onMailSendingFailed() {}
+                });
+
+                LogIt.i(TAG, "Sending Email now !");
                 dm.send();
             }
         }

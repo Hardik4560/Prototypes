@@ -5,19 +5,16 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-
-import com.hardy.utils.emailutils.DroidMailer;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
+
+import com.hardy.utils.emailutils.DroidMailer;
 
 /**
  * Class that handles the logging mechanism of an application. You should {@link LogIt#initialize(Context, Class)} in your
@@ -46,7 +43,7 @@ public class LogIt {
     private static Context mContext;
     private static String username;
     private static String password;
-    private static String mailTO;
+    private static String mailTo;
     private static String subject;
     private static String body;
 
@@ -108,15 +105,13 @@ public class LogIt {
         Intent sendLogsIntent = new Intent(mContext, SendLogsReceiver.class);
         sendLogsIntent.setAction(ACTION_SEND_LOG);
 
-        Bundle extras = new Bundle();
-        extras.putString(DroidMailer.EXTRA_USERNAME, username);
-        extras.putString(DroidMailer.EXTRA_PASSWORD, password);
-        extras.putString(DroidMailer.EXTRA_MAIL_TO, mailTO);
-        extras.putString(DroidMailer.EXTRA_SUBJECT, subject);
-        extras.putString(DroidMailer.EXTRA_BODY, body);
-        sendLogsIntent.putExtras(extras);
+        sendLogsIntent.putExtra(DroidMailer.EXTRA_USERNAME, username);
+        sendLogsIntent.putExtra(DroidMailer.EXTRA_PASSWORD, password);
+        sendLogsIntent.putExtra(DroidMailer.EXTRA_MAIL_TO, mailTo);
+        sendLogsIntent.putExtra(DroidMailer.EXTRA_SUBJECT, subject);
+        sendLogsIntent.putExtra(DroidMailer.EXTRA_BODY, body);
 
-        PendingIntent operation = PendingIntent.getBroadcast(mContext, 404, sendLogsIntent, 0);
+        PendingIntent operation = PendingIntent.getBroadcast(mContext, 404, sendLogsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + intervalTimeInMillis, intervalTimeInMillis, operation);
         LogIt.i(TAG, "Alarm set = " + System.currentTimeMillis() + intervalTimeInMillis);
@@ -244,6 +239,16 @@ public class LogIt {
         String filename = dataStorageLocation + File.separator + logFileName;
         DataOutputStream dos;
         try {
+            //Log file rotation.
+            File file = new File(filename);
+
+            double kilobytes = file.length() / 1024;
+
+            if (kilobytes > 100) {
+                deleteLogFile();
+                Log.i(TAG, "Log file rotation..");
+            }
+
             FileOutputStream fos = new FileOutputStream(filename, true);
             dos = new DataOutputStream(fos);
             dos.write((message + "\n").getBytes());
@@ -354,23 +359,12 @@ public class LogIt {
         return null;
     }
 
-    public static void setUsername(String username) {
+    public static void setEmailInfo(String username, String password, String mailTo, String subject, String body) {
         LogIt.username = username;
-    }
-
-    public static void setPassword(String password) {
         LogIt.password = password;
-    }
-
-    public static void setMailTO(String mailTO) {
-        LogIt.mailTO = mailTO;
-    }
-
-    public static void setSubject(String subject) {
+        LogIt.mailTo = mailTo;
         LogIt.subject = subject;
-    }
-
-    public static void setBody(String body) {
         LogIt.body = body;
+
     }
 }

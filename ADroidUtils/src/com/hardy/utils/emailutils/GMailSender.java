@@ -63,8 +63,7 @@ public class GMailSender extends javax.mail.Authenticator
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception
-    {
+    public synchronized boolean sendMail(String subject, String body, String sender, String recipients) throws Exception {
         MimeMessage message = new MimeMessage(session);
         DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
         message.setSender(new InternetAddress(sender));
@@ -72,46 +71,47 @@ public class GMailSender extends javax.mail.Authenticator
 
         message.setDataHandler(handler);
         //message.setContent(_multipart);
-        if (recipients.indexOf(',') > 0)
+        if (recipients.indexOf(',') > 0) {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
-        else
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
-        Transport.send(message);
-    }
-
-    public synchronized void sendMail(String subject, String body, String sender, String recipients, File attachment) throws Exception {
-        if (attachment == null) {
-            sendMail(subject, body, sender, recipients);
         }
         else {
-            try {
-                MimeMessage message = new MimeMessage(session);
-                message.setSender(new InternetAddress(sender));
-                message.setSubject(subject);
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+        }
 
-                MimeBodyPart mbp1 = new MimeBodyPart();
-                mbp1.setText(body);
+        Transport.send(message);
+        return true;
+    }
 
-                MimeBodyPart mbp2 = new MimeBodyPart();
-                FileDataSource fds = new FileDataSource(attachment);
-                mbp2.setDataHandler(new DataHandler(fds));
-                mbp2.setFileName(fds.getName());
+    public synchronized boolean sendMail(String subject, String body, String sender, String recipients, File attachment) throws Exception {
+        if (attachment == null) {
+            return sendMail(subject, body, sender, recipients);
+        }
+        else {
+            MimeMessage message = new MimeMessage(session);
+            message.setSender(new InternetAddress(sender));
+            message.setSubject(subject);
 
-                Multipart mp = new MimeMultipart();
-                mp.addBodyPart(mbp1);
-                mp.addBodyPart(mbp2);
+            MimeBodyPart mbp1 = new MimeBodyPart();
+            mbp1.setText(body);
 
-                message.setContent(mp);
+            MimeBodyPart mbp2 = new MimeBodyPart();
+            FileDataSource fds = new FileDataSource(attachment);
+            mbp2.setDataHandler(new DataHandler(fds));
+            mbp2.setFileName(fds.getName());
 
-                if (recipients.indexOf(',') > 0)
-                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
-                else
-                    message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
-                Transport.send(message);
-            }
-            catch (Exception e) {
-                LogIt.e(TAG, e);
-            }
+            Multipart mp = new MimeMultipart();
+            mp.addBodyPart(mbp1);
+            mp.addBodyPart(mbp2);
+
+            message.setContent(mp);
+
+            if (recipients.indexOf(',') > 0)
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
+            else
+                message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+            Transport.send(message);
+            LogIt.i(TAG, "Email sent successfully!");
+            return true;
         }
     }
 

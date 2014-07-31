@@ -23,6 +23,14 @@ public class DroidMailer {
 
     String TAG = DroidMailer.class.getSimpleName();
 
+    private OnMailSendListener onMailSendListener;
+
+    public interface OnMailSendListener {
+        void onMailSendingFailed();
+
+        void onMailSuccessfully();
+    }
+
     //===========================================
     // VARIABLES
     //===========================================
@@ -85,21 +93,25 @@ public class DroidMailer {
         this.attachment = attachment;
     }
 
+    public void setOnMailSendListener(OnMailSendListener onMailSendListener) {
+        this.onMailSendListener = onMailSendListener;
+    }
+
     //===========================================
     // CLASS METHODS
     //===========================================
     public void send() {
         boolean valid = true;
 
-        if (username == null && username.isEmpty()) {
+        if (username == null || username.isEmpty()) {
             LogIt.e(TAG, "You didn't set Gmail username!");
             valid = false;
         }
-        if (password == null && password.isEmpty()) {
+        if (password == null || password.isEmpty()) {
             LogIt.e(TAG, "You didn't set Gmail password!");
             valid = false;
         }
-        if (mailto == null && mailto.isEmpty()) {
+        if (mailto == null || mailto.isEmpty()) {
             LogIt.e(TAG, "You didn't set email recipient!");
             valid = false;
         }
@@ -112,7 +124,7 @@ public class DroidMailer {
         }
     }
 
-    public class startSendingEmail extends AsyncTask<String, Void, String> {
+    public class startSendingEmail extends AsyncTask<String, Void, Boolean> {
         ProgressDialog pd;
 
         @Override
@@ -134,20 +146,24 @@ public class DroidMailer {
         }
 
         @Override
-        protected String doInBackground(String... arg0) {
+        protected Boolean doInBackground(String... arg0) {
+            boolean status = true;
+
             try {
+                LogIt.i(TAG, "Email is being Sent!");
                 GMailSender sender = new GMailSender(username, password);
-                sender.sendMail(subject, body, username, mailto, attachment);
+                status = sender.sendMail(subject, body, username, mailto, attachment);
             }
             catch (Exception e) {
-                LogIt.e(TAG, e.getMessage().toString());
+                e.printStackTrace();
+                status = false;
             }
 
-            return null;
+            return status;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Boolean result) {
             if (processVisibility) {
                 pd.dismiss();
                 if (sendingMessageSuccess != null
@@ -157,6 +173,15 @@ public class DroidMailer {
                 else {
                     LogIt.d(TAG, "We dont have sending success message so we use generic");
                     ToastMaker.getInstance().createToast("Your message was sent successfully.");
+                }
+            }
+
+            if (onMailSendListener != null) {
+                if (result) {
+                    onMailSendListener.onMailSuccessfully();
+                }
+                else {
+                    onMailSendListener.onMailSendingFailed();
                 }
             }
             super.onPostExecute(result);
