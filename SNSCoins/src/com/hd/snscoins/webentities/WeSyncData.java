@@ -7,7 +7,6 @@ public class WeSyncData {
     List<WeCategory> category;
     List<WeSubCategory> sub_category;
     List<WeProduct> product;
-    List<WeProduct> products;
     List<WeEvent> event;
     List<WeNews> news;
     List<WeNewsCategory> news_category;
@@ -58,13 +57,5 @@ public class WeSyncData {
 
     public void setNews_category(List<WeNewsCategory> news_category) {
         this.news_category = news_category;
-    }
-
-    public List<WeProduct> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<WeProduct> products) {
-        this.products = products;
     }
 }

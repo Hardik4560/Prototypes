@@ -5,10 +5,37 @@ import java.util.List;
 
 public class WeProduct {
     Long product_id;
+    Long pid;
+    Long category_id;
     Long sub_category_id;
     String product_title;
     List<WeYear> product_mint;
     String product_image;
+    String sequence;
+
+    public Long getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(Long category_id) {
+        this.category_id = category_id;
+    }
+
+    public String getSequence() {
+        return sequence;
+    }
+
+    public Long getPid() {
+        return pid;
+    }
+
+    public void setPid(Long pid) {
+        this.pid = pid;
+    }
+
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
+    }
 
     public String getProduct_image() {
         return product_image;
@@ -75,7 +102,7 @@ public class WeProduct {
 
     public class WeMint {
         String title;
-        Integer rare;
+        Integer is_rare;
 
         public String getTitle() {
             return title;
@@ -85,14 +112,13 @@ public class WeProduct {
             this.title = title;
         }
 
-        public Integer isRare() {
-            return rare;
+        public Integer getIs_rare() {
+            return is_rare;
         }
 
-        public void setRare(Integer rare) {
-            this.rare = rare;
+        public void setIs_rare(Integer is_rare) {
+            this.is_rare = is_rare;
         }
-
     }
 
 }

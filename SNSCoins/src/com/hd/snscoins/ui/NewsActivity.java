@@ -41,6 +41,7 @@ import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
 import com.hd.snscoins.utils.ImageUtils;
+import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeNews;
 import com.hd.snscoins.webentities.WeSyncData;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -52,7 +53,7 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 @EActivity(R.layout.activity_events)
 public class NewsActivity extends Activity implements OnRefreshListener {
 
-    public static final String TAG = CoinListActivity.class.getSimpleName();
+    public static final String TAG = CoinsListActivity.class.getSimpleName();
     private NewsAdapter adapterNews;
 
     @ViewById(R.id.listView)
@@ -127,11 +128,11 @@ public class NewsActivity extends Activity implements OnRefreshListener {
         public ImageLoader imageLoader;
         DisplayImageOptions options;
 
-        List<News> eventsList;
+        List<News> newsList;
 
         public NewsAdapter(Context context) {
             super();
-            eventsList = new ArrayList<News>();
+            newsList = new ArrayList<News>();
             mInflater = LayoutInflater.from(context);
 
             //Initialize lazy loading api.
@@ -148,12 +149,12 @@ public class NewsActivity extends Activity implements OnRefreshListener {
 
         @Override
         public News getItem(int position) {
-            return eventsList.get(position);
+            return newsList.get(position);
         }
 
         @Override
         public int getCount() {
-            return eventsList.size();
+            return newsList.size();
         }
 
         @Override
@@ -201,9 +202,9 @@ public class NewsActivity extends Activity implements OnRefreshListener {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
-                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
-                        news.setImage_url(image);
-                        news.update();
+                        news.setImage_path(ImageUtils.saveToInternalSorage(mAppContext, loadedImage));
+                        SnsDatabase.session().getNewsDao().update(news);
+
                     }
 
                     @Override
@@ -230,7 +231,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
         }
 
         public void setDataSource(List<News> news) {
-            this.eventsList = news;
+            this.newsList = news;
             notifyDataSetChanged();
         }
     }
@@ -244,10 +245,8 @@ public class NewsActivity extends Activity implements OnRefreshListener {
     @Override
     public void onRefresh() {
         try {
-            final String GET_NEWS_URL = "http://demo.iccgnews.com/mobile/get_news.php?id=" + newsCategory.getId();
-
             RequestFuture<JSONObject> futureEvents = RequestFuture.newFuture();
-            JsonObjectRequest requestEvents = new JsonObjectRequest(GET_NEWS_URL, new JSONObject(), futureEvents, futureEvents);
+            JsonObjectRequest requestEvents = new JsonObjectRequest(UrlConstants.GET_NEWS_URL + newsCategory.getId(), new JSONObject(), futureEvents, futureEvents);
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -310,7 +309,7 @@ public class NewsActivity extends Activity implements OnRefreshListener {
 
                 News news = new News(weNews.getId(), weNews.getNews_title()
                         , weNews.getNews_date(), weNews.getNews_time()
-                        , weNews.getNews_details(), newsCategory.getId(), "", weNews.getImage_url());
+                        , weNews.getNews_details(), newsCategory.getId(), weNews.getImage(), "");
                 SnsDatabase.session().getNewsDao().insert(news);
             }
         }

@@ -46,7 +46,7 @@ public class CurrenciesActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(getApplicationContext(), CoinListActivity_.class);
+                Intent intent = new Intent(getApplicationContext(), CoinsListActivity_.class);
 
                 mAppContext.setTransientSubType(subTypeList.get(which));
                 startActivity(intent);
@@ -68,7 +68,7 @@ public class CurrenciesActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(getApplicationContext(), CoinListActivity_.class);
+                Intent intent = new Intent(getApplicationContext(), CoinsListActivity_.class);
 
                 mAppContext.setTransientSubType(subTypeList.get(which));
                 startActivity(intent);

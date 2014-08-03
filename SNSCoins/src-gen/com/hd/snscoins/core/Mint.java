@@ -13,8 +13,10 @@ import de.greenrobot.dao.DaoException;
 public class Mint {
 
     private Long id;
+    /** Not-null value. */
     private String title;
-    private Integer rare;
+    private int rare;
+    private boolean checked;
     private long id_year;
 
     /** Used to resolve relations */
@@ -37,10 +39,11 @@ public class Mint {
         this.id = id;
     }
 
-    public Mint(Long id, String title, Integer rare, long id_year) {
+    public Mint(Long id, String title, int rare, boolean checked, long id_year) {
         this.id = id;
         this.title = title;
         this.rare = rare;
+        this.checked = checked;
         this.id_year = id_year;
     }
 
@@ -58,20 +61,30 @@ public class Mint {
         this.id = id;
     }
 
+    /** Not-null value. */
     public String getTitle() {
         return title;
     }
 
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public Integer getRare() {
+    public int getRare() {
         return rare;
     }
 
-    public void setRare(Integer rare) {
+    public void setRare(int rare) {
         this.rare = rare;
+    }
+
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public long getId_year() {

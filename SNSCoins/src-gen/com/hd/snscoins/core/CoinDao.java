@@ -29,10 +29,13 @@ public class CoinDao extends AbstractDao<Coin, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Image_url = new Property(2, String.class, "image_url", false, "IMAGE_URL");
-        public final static Property Image_path = new Property(3, String.class, "image_path", false, "IMAGE_PATH");
-        public final static Property Id_sub_type = new Property(4, long.class, "id_sub_type", false, "ID_SUB_TYPE");
+        public final static Property ResourceId = new Property(1, long.class, "resourceId", false, "RESOURCE_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Image_url = new Property(3, String.class, "image_url", false, "IMAGE_URL");
+        public final static Property Image_path = new Property(4, String.class, "image_path", false, "IMAGE_PATH");
+        public final static Property Id_sub_type = new Property(5, long.class, "id_sub_type", false, "ID_SUB_TYPE");
+        public final static Property Bookmarked = new Property(6, Boolean.class, "bookmarked", false, "BOOKMARKED");
+        public final static Property Sequence = new Property(7, String.class, "sequence", false, "SEQUENCE");
     };
 
     private DaoSession daoSession;
@@ -53,10 +56,13 @@ public class CoinDao extends AbstractDao<Coin, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'product' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'NAME' TEXT NOT NULL ," + // 1: name
-                "'IMAGE_URL' TEXT," + // 2: image_url
-                "'IMAGE_PATH' TEXT," + // 3: image_path
-                "'ID_SUB_TYPE' INTEGER NOT NULL );"); // 4: id_sub_type
+                "'RESOURCE_ID' INTEGER NOT NULL ," + // 1: resourceId
+                "'NAME' TEXT NOT NULL ," + // 2: name
+                "'IMAGE_URL' TEXT," + // 3: image_url
+                "'IMAGE_PATH' TEXT," + // 4: image_path
+                "'ID_SUB_TYPE' INTEGER NOT NULL ," + // 5: id_sub_type
+                "'BOOKMARKED' INTEGER," + // 6: bookmarked
+                "'SEQUENCE' TEXT);"); // 7: sequence
     }
 
     /** Drops the underlying database table. */
@@ -74,18 +80,29 @@ public class CoinDao extends AbstractDao<Coin, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindString(2, entity.getName());
+        stmt.bindLong(2, entity.getResourceId());
+        stmt.bindString(3, entity.getName());
  
         String image_url = entity.getImage_url();
         if (image_url != null) {
-            stmt.bindString(3, image_url);
+            stmt.bindString(4, image_url);
         }
  
         String image_path = entity.getImage_path();
         if (image_path != null) {
-            stmt.bindString(4, image_path);
+            stmt.bindString(5, image_path);
         }
-        stmt.bindLong(5, entity.getId_sub_type());
+        stmt.bindLong(6, entity.getId_sub_type());
+ 
+        Boolean bookmarked = entity.getBookmarked();
+        if (bookmarked != null) {
+            stmt.bindLong(7, bookmarked ? 1l: 0l);
+        }
+ 
+        String sequence = entity.getSequence();
+        if (sequence != null) {
+            stmt.bindString(8, sequence);
+        }
     }
 
     @Override
@@ -105,10 +122,13 @@ public class CoinDao extends AbstractDao<Coin, Long> {
     public Coin readEntity(Cursor cursor, int offset) {
         Coin entity = new Coin( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // image_url
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // image_path
-            cursor.getLong(offset + 4) // id_sub_type
+            cursor.getLong(offset + 1), // resourceId
+            cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // image_url
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // image_path
+            cursor.getLong(offset + 5), // id_sub_type
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0, // bookmarked
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // sequence
         );
         return entity;
     }
@@ -117,10 +137,13 @@ public class CoinDao extends AbstractDao<Coin, Long> {
     @Override
     public void readEntity(Cursor cursor, Coin entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.getString(offset + 1));
-        entity.setImage_url(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setImage_path(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setId_sub_type(cursor.getLong(offset + 4));
+        entity.setResourceId(cursor.getLong(offset + 1));
+        entity.setName(cursor.getString(offset + 2));
+        entity.setImage_url(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setImage_path(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setId_sub_type(cursor.getLong(offset + 5));
+        entity.setBookmarked(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
+        entity.setSequence(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     /** @inheritdoc */

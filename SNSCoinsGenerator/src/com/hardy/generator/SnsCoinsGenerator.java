@@ -50,6 +50,7 @@ public class SnsCoinsGenerator {
         Entity coin = schema.addEntity("Coin");
         coin.setTableName(SnsDatabase.TABLE_COIN);
         coin.addIdProperty();
+        coin.addLongProperty("resourceId").notNull();
         coin.addStringProperty("name").notNull();
 
         coin.addStringProperty("image_url");
@@ -61,6 +62,8 @@ public class SnsCoinsGenerator {
 
         Property coin_sub_type_id = coin.addLongProperty("id_sub_type").notNull().getProperty();
         coin.addToOne(sub_type, coin_sub_type_id);
+        coin.addBooleanProperty("bookmarked");
+        coin.addStringProperty("sequence");
 
         ToMany coinTypeToCoin = sub_type.addToMany(coin, coin_sub_type_id);
         coinTypeToCoin.setName("coinList");
@@ -82,8 +85,9 @@ public class SnsCoinsGenerator {
         Entity mint = schema.addEntity("Mint");
         mint.setTableName(SnsDatabase.TABLE_MINT);
         mint.addIdProperty();
-        mint.addStringProperty("title");
-        mint.addIntProperty("rare");
+        mint.addStringProperty("title").notNull();
+        mint.addIntProperty("rare").notNull();
+        mint.addBooleanProperty("checked").notNull();
 
         Property mint_year_id = mint.addLongProperty("id_year").notNull().getProperty();
         mint.addToOne(year, mint_year_id);

@@ -1,9 +1,19 @@
 
 package com.hd.snscoins.ui;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.hardy.logging.Logger;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;
@@ -15,19 +25,10 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
-import android.app.Activity;
-import android.drm.DrmStore.Action;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.text.Html;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 @EActivity(R.layout.activity_event_detail)
 public class EventDetailsActivity extends Activity {
+
+    private static final String TAG = EventDetailsActivity.class.getSimpleName();
 
     @ViewById(R.id.txtTitle)
     protected TextView txtTitle;
@@ -92,7 +93,10 @@ public class EventDetailsActivity extends Activity {
             txtEndTime.setText(event.getEnd_time());
 
             txtVenue.setText(event.getVenue());
-            txtDescription.setText(Html.fromHtml(event.getDetails()));
+            String details = event.getDetails();
+            if (!TextUtils.isEmpty(details)) {
+                txtDescription.setText(Html.fromHtml(Html.fromHtml(details).toString()));
+            }
 
             String photoPath = event.getImage_path();
             if (photoPath == null || photoPath.equals("")) {

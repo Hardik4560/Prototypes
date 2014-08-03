@@ -13,14 +13,14 @@ public class WeEvent {
     private String event_end_time;
     private String event_venue;
     private String event_details;
-    private String image_url;
+    private String image;
 
-    public String getImage_url() {
-        return image_url;
+    public String getImage() {
+        return image;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Long getId() {

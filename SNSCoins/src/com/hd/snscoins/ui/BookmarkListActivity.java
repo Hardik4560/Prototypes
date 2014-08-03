@@ -21,10 +21,12 @@ import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Coin;
-import com.hd.snscoins.core.CoinSubType;
+import com.hd.snscoins.core.CoinDao.Properties;
+import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,12 +35,15 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 @EActivity(R.layout.activity_coin_list)
-public class CoinListActivity extends ListActivity {
+public class BookmarkListActivity extends ListActivity {
 
-    public static final String TAG = CoinListActivity.class.getSimpleName();
+    public static final String TAG = BookmarkListActivity.class.getSimpleName();
     private CoinAdapter adapterCoin;
 
-    CoinSubType subType;
+    List<Coin> mCoinList;
+
+    @ViewById(R.id.empty_view)
+    TextView empty_view;
 
     private SnSCoreSystem mAppContext;
 
@@ -47,8 +52,6 @@ public class CoinListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
 
         mAppContext = ((SnSCoreSystem) getApplicationContext());
-        subType = mAppContext.getTransientSubType();
-        mAppContext.setTransientSubType(null);
     }
 
     @AfterViews
@@ -123,7 +126,6 @@ public class CoinListActivity extends ListActivity {
             viewHolder.name.setText(coinName);
 
             if (photoPath == null || photoPath.equals("")) {
-                //String url = ImageTypes.product_image.getImageUrl(coin.getId());
                 String url = coin.getImage_url();
                 imageLoader.displayImage(url, viewHolder.photo, options, new ImageLoadingListener() {
 
@@ -140,7 +142,7 @@ public class CoinListActivity extends ListActivity {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
-                        coin.setImage_path(imageUri);
+                        coin.setImage_path(ImageUtils.saveToInternalSorage(mAppContext, loadedImage));
                         coin.update();
                     }
 
@@ -160,7 +162,7 @@ public class CoinListActivity extends ListActivity {
                 @Override
                 public void onClick(View v) {
                     mAppContext.setTransientProduct(coin);
-                    Intent intent = new Intent(getApplicationContext(), ProductDetailActivity_.class);
+                    Intent intent = new Intent(getApplicationContext(), CoinsDetailActivity_.class);
                     startActivity(intent);
                 }
             });
@@ -225,7 +227,13 @@ public class CoinListActivity extends ListActivity {
                 } while (cursor.moveToNext());
             }
             */
-            coins = subType.getCoinList();
+            coins = SnsDatabase
+                    .session()
+                    .getCoinDao()
+                    .queryBuilder()
+                    .where(Properties.Bookmarked.eq("TRUE"))
+                    .list();
+
             return null;
         }
 
@@ -234,6 +242,15 @@ public class CoinListActivity extends ListActivity {
             super.onPostExecute(result);
             progressDialog.dismiss();
             adapterCoin.setDataSource(coins);
+
+            if (coins.isEmpty()) {
+                getListView().setVisibility(View.GONE);
+                empty_view.setVisibility(View.VISIBLE);
+            }
+            else {
+                getListView().setVisibility(View.VISIBLE);
+                empty_view.setVisibility(View.GONE);
+            }
         }
     }
 }

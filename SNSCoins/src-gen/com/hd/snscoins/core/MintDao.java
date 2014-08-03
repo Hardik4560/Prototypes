@@ -30,8 +30,9 @@ public class MintDao extends AbstractDao<Mint, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
-        public final static Property Rare = new Property(2, Integer.class, "rare", false, "RARE");
-        public final static Property Id_year = new Property(3, long.class, "id_year", false, "ID_YEAR");
+        public final static Property Rare = new Property(2, int.class, "rare", false, "RARE");
+        public final static Property Checked = new Property(3, boolean.class, "checked", false, "CHECKED");
+        public final static Property Id_year = new Property(4, long.class, "id_year", false, "ID_YEAR");
     };
 
     private DaoSession daoSession;
@@ -52,9 +53,10 @@ public class MintDao extends AbstractDao<Mint, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'mint' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'TITLE' TEXT," + // 1: title
-                "'RARE' INTEGER," + // 2: rare
-                "'ID_YEAR' INTEGER NOT NULL );"); // 3: id_year
+                "'TITLE' TEXT NOT NULL ," + // 1: title
+                "'RARE' INTEGER NOT NULL ," + // 2: rare
+                "'CHECKED' INTEGER NOT NULL ," + // 3: checked
+                "'ID_YEAR' INTEGER NOT NULL );"); // 4: id_year
     }
 
     /** Drops the underlying database table. */
@@ -72,17 +74,10 @@ public class MintDao extends AbstractDao<Mint, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        String title = entity.getTitle();
-        if (title != null) {
-            stmt.bindString(2, title);
-        }
- 
-        Integer rare = entity.getRare();
-        if (rare != null) {
-            stmt.bindLong(3, rare);
-        }
-        stmt.bindLong(4, entity.getId_year());
+        stmt.bindString(2, entity.getTitle());
+        stmt.bindLong(3, entity.getRare());
+        stmt.bindLong(4, entity.getChecked() ? 1l: 0l);
+        stmt.bindLong(5, entity.getId_year());
     }
 
     @Override
@@ -102,9 +97,10 @@ public class MintDao extends AbstractDao<Mint, Long> {
     public Mint readEntity(Cursor cursor, int offset) {
         Mint entity = new Mint( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
-            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // rare
-            cursor.getLong(offset + 3) // id_year
+            cursor.getString(offset + 1), // title
+            cursor.getInt(offset + 2), // rare
+            cursor.getShort(offset + 3) != 0, // checked
+            cursor.getLong(offset + 4) // id_year
         );
         return entity;
     }
@@ -113,9 +109,10 @@ public class MintDao extends AbstractDao<Mint, Long> {
     @Override
     public void readEntity(Cursor cursor, Mint entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setRare(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
-        entity.setId_year(cursor.getLong(offset + 3));
+        entity.setTitle(cursor.getString(offset + 1));
+        entity.setRare(cursor.getInt(offset + 2));
+        entity.setChecked(cursor.getShort(offset + 3) != 0);
+        entity.setId_year(cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

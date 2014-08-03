@@ -21,7 +21,7 @@ import com.hd.snscoins.core.CoinType;
 import com.hd.snscoins.db.SnsDatabase;
 
 @EActivity(R.layout.activity_coin_country_type)
-public class CoinActivity extends Activity {
+public class CoinsActivity extends Activity {
 
     private List<CoinType> coinList;
     SnSCoreSystem mAppContext;
@@ -46,7 +46,7 @@ public class CoinActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ToastMaker.getInstance().createToast(subTypeList.get(which).toString());
-                Intent intent = new Intent(getApplicationContext(), CoinListActivity_.class);
+                Intent intent = new Intent(getApplicationContext(), CoinsListActivity_.class);
 
                 mAppContext.setTransientSubType(subTypeList.get(which));
                 startActivity(intent);
@@ -68,7 +68,7 @@ public class CoinActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ToastMaker.getInstance().createToast(subTypeList.get(which).toString());
-                Intent intent = new Intent(getApplicationContext(), CoinListActivity_.class);
+                Intent intent = new Intent(getApplicationContext(), CoinsListActivity_.class);
                 mAppContext.setTransientSubType(subTypeList.get(which));
                 startActivity(intent);
             }
@@ -89,7 +89,7 @@ public class CoinActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ToastMaker.getInstance().createToast(subTypeList.get(which).toString());
-                Intent intent = new Intent(getApplicationContext(), CoinListActivity_.class);
+                Intent intent = new Intent(getApplicationContext(), CoinsListActivity_.class);
                 mAppContext.setTransientSubType(subTypeList.get(which));
                 startActivity(intent);
             }

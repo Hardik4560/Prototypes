@@ -8,8 +8,8 @@ import retrofit.http.Path;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,8 +20,6 @@ import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.constants.SnsConstants;
-import com.hd.snscoins.core.CoinSubType;
-import com.hd.snscoins.core.CoinType;
 import com.hd.snscoins.core.NewsCategory;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.webentities.WeSyncData;
@@ -40,13 +38,18 @@ public class HomeScreenActivity extends Activity {
 
     public void onCoinsClicked(View v) {
         if (checkDataSynced()) {
-            Intent intent = new Intent(this, CoinActivity_.class);
+            Intent intent = new Intent(this, CoinsActivity_.class);
             startActivity(intent);
         }
     }
 
     public void onEventsClicked(View v) {
         Intent intent = new Intent(this, EventsActivity_.class);
+        startActivity(intent);
+    }
+
+    public void onBookmarksClicked(View v) {
+        Intent intent = new Intent(this, BookmarkListActivity_.class);
         startActivity(intent);
     }
 

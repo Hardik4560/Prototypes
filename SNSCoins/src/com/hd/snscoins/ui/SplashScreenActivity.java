@@ -3,6 +3,7 @@ package com.hd.snscoins.ui;
 
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -111,6 +112,7 @@ public class SplashScreenActivity extends Activity {
 
                 // Do the unmarshaling of coins.
                 Gson gson = new Gson();
+
                 WeSyncData syncDataCoins = gson.fromJson(responseCoins.toString(), WeSyncData.class);
                 WeSyncData syncDataCurrencies = gson.fromJson(responseCurrencies.toString(), WeSyncData.class);
                 WeSyncData syncDataNews = gson.fromJson(responseNews.toString(), WeSyncData.class);
@@ -127,6 +129,11 @@ public class SplashScreenActivity extends Activity {
                 e.printStackTrace();
             }
             catch (ExecutionException e) {
+                // exception handling
+                success = false;
+                e.printStackTrace();
+            }
+            catch (Exception e) {
                 // exception handling
                 success = false;
                 e.printStackTrace();
@@ -154,6 +161,8 @@ public class SplashScreenActivity extends Activity {
             return true;
         }
 
+        long productCount = 0;
+
         private boolean saveProductDataToDb(WeSyncData syncData) {
             try {
                 SnsDatabase.db().beginTransaction();
@@ -179,11 +188,35 @@ public class SplashScreenActivity extends Activity {
                     SnsDatabase.session().getCoinSubTypeDao().insert(subType);
                 }
 
+                //Extra sub category for UNC Set.
+                CoinSubType uncSetSubType = null;
+
                 // Create some coins
                 for (int i = 0; i < syncData.getProduct().size(); i++) {
                     WeProduct weProduct = syncData.getProduct().get(i);
 
-                    Coin coin = new Coin(weProduct.getProduct_id(), weProduct.getProduct_title(), "", weProduct.getProduct_image(), weProduct.getSub_category_id());
+                    String imageUrl = weProduct.getProduct_image();
+
+                    long subCatId = weProduct.getSub_category_id();
+
+                    Coin coin = null;
+                    if (subCatId == 0) {
+
+                        //Add an extra subcategory for UNC set.
+                        if (uncSetSubType == null) {
+                            uncSetSubType = new CoinSubType(
+                                    -1l,
+                                    "UNC Set",
+                                    weProduct.getCategory_id());
+                            SnsDatabase.session().getCoinSubTypeDao().insert(uncSetSubType);
+                        }
+
+                        coin = new Coin(++productCount, weProduct.getProduct_id(), weProduct.getProduct_title(), imageUrl, null, uncSetSubType.getId(), false, weProduct.getSequence());
+                    }
+                    else {
+                        coin = new Coin(++productCount, weProduct.getProduct_id(), weProduct.getProduct_title(), imageUrl, null, weProduct.getSub_category_id(), false, weProduct.getSequence());
+                    }
+
                     SnsDatabase.session().getCoinDao().insert(coin);
                 }
 

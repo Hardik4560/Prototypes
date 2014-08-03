@@ -9,14 +9,23 @@ public class WeNews {
     String news_date;
     String news_time;
     String news_details;
-    String image_url;
+    String image;
+    String description;
 
-    public String getImage_url() {
-        return image_url;
+    public String getDescription() {
+        return description;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Long getId() {

@@ -14,11 +14,14 @@ import de.greenrobot.dao.DaoException;
 public class Coin {
 
     private Long id;
+    private long resourceId;
     /** Not-null value. */
     private String name;
     private String image_url;
     private String image_path;
     private long id_sub_type;
+    private Boolean bookmarked;
+    private String sequence;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -41,12 +44,15 @@ public class Coin {
         this.id = id;
     }
 
-    public Coin(Long id, String name, String image_url, String image_path, long id_sub_type) {
+    public Coin(Long id, long resourceId, String name, String image_url, String image_path, long id_sub_type, Boolean bookmarked, String sequence) {
         this.id = id;
+        this.resourceId = resourceId;
         this.name = name;
         this.image_url = image_url;
         this.image_path = image_path;
         this.id_sub_type = id_sub_type;
+        this.bookmarked = bookmarked;
+        this.sequence = sequence;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -61,6 +67,14 @@ public class Coin {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public long getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(long resourceId) {
+        this.resourceId = resourceId;
     }
 
     /** Not-null value. */
@@ -95,6 +109,22 @@ public class Coin {
 
     public void setId_sub_type(long id_sub_type) {
         this.id_sub_type = id_sub_type;
+    }
+
+    public Boolean getBookmarked() {
+        return bookmarked;
+    }
+
+    public void setBookmarked(Boolean bookmarked) {
+        this.bookmarked = bookmarked;
+    }
+
+    public String getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
     }
 
     /** To-one relationship, resolved on first access. */

@@ -1,14 +1,11 @@
 
 package com.hd.snscoins.ui;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +16,6 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.News;
-import com.hd.snscoins.utils.ImageUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -101,11 +97,13 @@ public class NewsDetailsActivity extends Activity {
             txtVenue.setVisibility(View.GONE);
             txtVenueLabel.setVisibility(View.GONE);
 
-            txtDescription.setText(news.getDetails());
+            if (!TextUtils.isEmpty(news.getDetails())) {
+                txtDescription.setText(Html.fromHtml(Html.fromHtml(news.getDetails()).toString()));
+            }
 
-            String photoPath = news.getImage_url();
+            String photoPath = news.getImage_path();
 
-            if (photoPath.equals("")) {
+            if (TextUtils.isEmpty(photoPath)) {
                 String url = news.getImage_url();
                 imageLoader.displayImage(url, imgView, options, new ImageLoadingListener() {
 

@@ -38,17 +38,20 @@ import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
+import com.hd.snscoins.utils.ImageUtils;
 import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeEvent;
 import com.hd.snscoins.webentities.WeSyncData;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 @EActivity(R.layout.activity_events)
 public class EventsActivity extends Activity implements OnRefreshListener {
 
-    public static final String TAG = CoinListActivity.class.getSimpleName();
+    public static final String TAG = CoinsListActivity.class.getSimpleName();
     private EventAdapter adapterEvents;
 
     @ViewById(R.id.listView)
@@ -178,6 +181,38 @@ public class EventsActivity extends Activity implements OnRefreshListener {
                     startActivity(intent);
                 }
             });
+
+            if (photoPath == null || photoPath.equals("")) {
+                String url = event.getImage_url();
+                imageLoader.displayImage(url, viewHolder.photo, options, new ImageLoadingListener() {
+
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //Save the image in file system.
+                        event.setImage_path(ImageUtils.saveToInternalSorage(mAppContext, loadedImage));
+                        SnsDatabase.session().getEventsDao().update(event);
+                        
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                });
+            }
+            else {
+                imageLoader.displayImage("file://" + photoPath, viewHolder.photo, options);
+            }
             return convertView;
         }
 
@@ -251,7 +286,7 @@ public class EventsActivity extends Activity implements OnRefreshListener {
                         weEvent.getId(), weEvent.getEvent_title()
                         , weEvent.getEvent_start_date(), weEvent.getEvent_start_time()
                         , weEvent.getEvent_end_date(), weEvent.getEvent_end_time()
-                        , weEvent.getEvent_venue(), weEvent.getEvent_details(), "", weEvent.getImage_url()
+                        , weEvent.getEvent_venue(), weEvent.getEvent_details(), weEvent.getImage(), ""
                                );
                 SnsDatabase.session().getEventsDao().insert(event);
             }

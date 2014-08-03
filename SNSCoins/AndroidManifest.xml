@@ -25,16 +25,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.HomeScreenActivity_" >
+        <activity android:name=".ui.HomeScreenActivity_" 
+            android:label="">
         </activity>
-        <activity android:name=".ui.CoinListActivity_" >
+        <activity android:name=".ui.CoinsListActivity_" android:label="">
         </activity>
-        <activity android:name=".ui.CoinActivity_" >
+        <activity android:name=".ui.CoinsActivity_" android:label="">
         </activity>
         <activity android:name=".ui.CurrenciesActivity_" >
         </activity>
-        <activity android:name=".ui.ProductDetailActivity_" >
-        </activity>        
+        <activity android:name=".ui.CoinsDetailActivity_" >
+        </activity>
         <activity android:name=".ui.EventsActivity_" >
         </activity>
         <activity android:name=".ui.EventDetailsActivity_" >
@@ -42,7 +43,9 @@
         <activity android:name=".ui.NewsActivity_" >
         </activity>
         <activity android:name=".ui.NewsDetailsActivity_" >
-        </activity>        
+        </activity>
+        <activity android:name=".ui.BookmarkListActivity_" >
+        </activity>
     </application>
 
 </manifest>

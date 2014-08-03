@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,6 +32,7 @@ import com.google.gson.Gson;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.hardy.logging.Logger;
 import com.hardy.utils.ToastMaker;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
@@ -39,7 +42,6 @@ import com.hd.snscoins.core.Year;
 import com.hd.snscoins.db.SnsDatabase;
 import com.hd.snscoins.network.NetworkController;
 import com.hd.snscoins.utils.ImageUtils;
-import com.hd.snscoins.utils.SnsKeyConstants.ImageTypes;
 import com.hd.snscoins.utils.UrlConstants;
 import com.hd.snscoins.webentities.WeProduct;
 import com.hd.snscoins.webentities.WeProduct.WeMint;
@@ -52,7 +54,9 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 @EActivity(R.layout.activity_product_detail)
-public class ProductDetailActivity extends Activity {
+public class CoinsDetailActivity extends Activity {
+
+    public static final String TAG = CoinsDetailActivity_.class.getSimpleName();
 
     @ViewById(R.id.txtTitle)
     protected TextView txtTitle;
@@ -106,7 +110,7 @@ public class ProductDetailActivity extends Activity {
             txtCategory.setText(mCoin.getCoinSubType().getType());
 
             String photoPath = mCoin.getImage_path();
-            if (photoPath.equals("")) {
+            if (photoPath == null || photoPath.equals("")) {
                 String url = mCoin.getImage_url();
                 imageLoader.displayImage(url, imgLogo, options, new ImageLoadingListener() {
 
@@ -123,8 +127,7 @@ public class ProductDetailActivity extends Activity {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //Save the image in file system.
-                        // String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
-                        mCoin.setImage_path(imageUri);
+                        String image = ImageUtils.saveToInternalSorage(getApplicationContext(), loadedImage);
                         SnsDatabase.session().update(mCoin);
                     }
 
@@ -144,6 +147,7 @@ public class ProductDetailActivity extends Activity {
                 getDetailsLoader.execute();
             }
             else {
+                progressBar.setVisibility(View.GONE);
                 //Set the adapter for the years.
                 lstYears.setAdapter(new YearAdapter(mCoin));
             }
@@ -193,11 +197,11 @@ public class ProductDetailActivity extends Activity {
 
             Year year = getItem(arg0);
             viewHolder.txtYear.setText(year.getTitle());
-            List<Mint> mintList = year.getMintList();
+            final List<Mint> mintList = year.getMintList();
 
             //Add the mints.
             for (Iterator<Mint> iterator = mintList.iterator(); iterator.hasNext();) {
-                Mint mint = iterator.next();
+                final Mint mint = iterator.next();
 
                 RelativeLayout relativeLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.e_lst_mint_chkbox, null);
                 viewHolder.mintLayout.addView(relativeLayout);
@@ -205,14 +209,43 @@ public class ProductDetailActivity extends Activity {
                 TextView txt_mint = (TextView) relativeLayout.findViewById(R.id.txt_mint);
                 txt_mint.setText(mint.getTitle());
 
-                CheckBox chkBox = (CheckBox) relativeLayout.findViewById(R.id.chkbox);
                 TextView txtView = (TextView) relativeLayout.findViewById(R.id.txt_rare);
+
                 if (mint.getRare() == 1) {
                     txtView.setVisibility(View.VISIBLE);
                 }
                 else {
                     txtView.setVisibility(View.INVISIBLE);
                 }
+
+                CheckBox chkBox = (CheckBox) relativeLayout.findViewById(R.id.chkbox);
+
+                chkBox.setOnCheckedChangeListener(null);
+                chkBox.setChecked(mint.getChecked());
+                chkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mint.setChecked(isChecked);
+                        mint.update();
+                        
+                        boolean isBookmarked = false;
+
+                        //Check if any single mint is checked.
+                        for (Iterator<Mint> iterator = mintList.iterator(); iterator.hasNext();) {
+                            final Mint mintToCheck = iterator.next();
+                            
+                            if(mintToCheck.getChecked()){
+                                isBookmarked = true;
+                                break;
+                            }
+                        }
+                        
+                        mCoin.setBookmarked(isBookmarked);
+                        mCoin.update();
+
+                    }
+                });
             }
 
             return convertView;
@@ -242,7 +275,9 @@ public class ProductDetailActivity extends Activity {
 
             RequestFuture<JSONObject> futureYears = RequestFuture.newFuture();
 
-            JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL + mCoin.getId(), new JSONObject(), futureYears, futureYears);
+            //JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL + mCoin.getResourceId(), new JSONObject(), futureYears, futureYears);
+            JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL, new JSONObject(), futureYears, futureYears);
+            Logger.d(TAG, "RequestUrl = " + requestYears.toString());
 
             //Set the timeouts
             DefaultRetryPolicy defaultPolicy = new DefaultRetryPolicy(3000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -290,8 +325,9 @@ public class ProductDetailActivity extends Activity {
             //INSERT THE NEW DATA IN THE LIST >>>>>>
             List<WeProduct> weProducts = syncData.getProduct();
 
-            if (weProducts.isEmpty()) {
+            if (weProducts == null || weProducts.isEmpty()) {
                 //No years with this coins
+                ToastMaker.getInstance().createToast("No detail available !");
                 return true;
             }
 
@@ -317,7 +353,8 @@ public class ProductDetailActivity extends Activity {
 
                         Mint mint = new Mint();
                         mint.setTitle(weMint.getTitle());
-                        mint.setRare(weMint.isRare());
+                        mint.setRare(weMint.getIs_rare());
+                        mint.setChecked(false);
                         mint.setId_year(year.getId());
 
                         SnsDatabase.session().getMintDao().insert(mint);
