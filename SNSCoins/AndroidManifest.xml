@@ -25,26 +25,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.HomeScreenActivity_" 
-            android:label="">
+        <activity
+            android:name=".ui.HomeScreenActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.CoinsListActivity_" android:label="">
+        <activity
+            android:name=".ui.CoinsListActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.CoinsActivity_" android:label="">
+        <activity
+            android:name=".ui.CoinsActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.CurrenciesActivity_" >
+        <activity
+            android:name=".ui.CurrenciesActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.CoinsDetailActivity_" >
+        <activity
+            android:name=".ui.CoinsDetailActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.EventsActivity_" >
+        <activity
+            android:name=".ui.EventsActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.EventDetailsActivity_" >
+        <activity
+            android:name=".ui.EventDetailsActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.NewsActivity_" >
+        <activity
+            android:name=".ui.NewsActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.NewsDetailsActivity_" >
+        <activity
+            android:name=".ui.NewsDetailsActivity_"
+            android:label="" >
         </activity>
-        <activity android:name=".ui.BookmarkListActivity_" >
+        <activity
+            android:name=".ui.BookmarkListActivity_"
+            android:label="" >
         </activity>
     </application>
 

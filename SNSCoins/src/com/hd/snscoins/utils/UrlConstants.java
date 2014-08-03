@@ -9,7 +9,7 @@ public class UrlConstants {
     public final static String GET_EVENTS_URL = "http://demo.iccgnews.com/mobile/get_all_events.php";
     public final static String GET_NEWS_URL = "http://demo.iccgnews.com/mobile/get_news.php?id=";
 
-    //public final static String GET_PRODUCT_DETAIL = "http://demo.iccgnews.com/mobile/get_product.php?id=";
-    public final static String GET_PRODUCT_DETAIL = "http://www.mocky.io/v2/53dd21226ab0018f194ebded";
+    public final static String GET_PRODUCT_DETAIL = "http://demo.iccgnews.com/mobile/get_product.php?id=";
+    //public final static String GET_PRODUCT_DETAIL = "http://www.mocky.io/v2/53dd21226ab0018f194ebded";
 
 }

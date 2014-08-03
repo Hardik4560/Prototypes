@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -26,8 +27,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -199,6 +202,7 @@ public class CoinsDetailActivity extends Activity {
             viewHolder.txtYear.setText(year.getTitle());
             final List<Mint> mintList = year.getMintList();
 
+            viewHolder.mintLayout.removeAllViews();
             //Add the mints.
             for (Iterator<Mint> iterator = mintList.iterator(); iterator.hasNext();) {
                 final Mint mint = iterator.next();
@@ -228,19 +232,19 @@ public class CoinsDetailActivity extends Activity {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         mint.setChecked(isChecked);
                         mint.update();
-                        
+
                         boolean isBookmarked = false;
 
                         //Check if any single mint is checked.
                         for (Iterator<Mint> iterator = mintList.iterator(); iterator.hasNext();) {
                             final Mint mintToCheck = iterator.next();
-                            
-                            if(mintToCheck.getChecked()){
+
+                            if (mintToCheck.getChecked()) {
                                 isBookmarked = true;
                                 break;
                             }
                         }
-                        
+
                         mCoin.setBookmarked(isBookmarked);
                         mCoin.update();
 
@@ -273,10 +277,10 @@ public class CoinsDetailActivity extends Activity {
 
             //Clear any previous data
 
-            RequestFuture<JSONObject> futureYears = RequestFuture.newFuture();
+            RequestFuture<String> futureYears = RequestFuture.newFuture();
 
-            //JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL + mCoin.getResourceId(), new JSONObject(), futureYears, futureYears);
-            JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL, new JSONObject(), futureYears, futureYears);
+            StringRequest requestYears = new StringRequest(UrlConstants.GET_PRODUCT_DETAIL + mCoin.getResourceId(), futureYears, futureYears);
+            //JsonObjectRequest requestYears = new JsonObjectRequest(UrlConstants.GET_PRODUCT_DETAIL, new JSONObject(), futureYears, futureYears);
             Logger.d(TAG, "RequestUrl = " + requestYears.toString());
 
             //Set the timeouts
@@ -287,11 +291,12 @@ public class CoinsDetailActivity extends Activity {
             NetworkController.getInstance().addToRequestQueue(requestYears);
 
             try {
-                JSONObject responseYears = futureYears.get(); // this will block
+                String responseYears = futureYears.get(); // this will block
 
+                JSONObject jsonObject = new JSONObject(responseYears.substring(responseYears.indexOf("{"), responseYears.lastIndexOf("}") + 1));
                 // Do the unmarshaling of coins.
                 Gson gson = new Gson();
-                WeSyncData syncDataCoins = gson.fromJson(responseYears.toString(), WeSyncData.class);
+                WeSyncData syncDataCoins = gson.fromJson(jsonObject.toString(), WeSyncData.class);
 
                 success = saveProductDataToDb(syncDataCoins);
             }
@@ -302,6 +307,10 @@ public class CoinsDetailActivity extends Activity {
             }
             catch (ExecutionException e) {
                 // exception handling
+                success = false;
+                e.printStackTrace();
+            }
+            catch (JSONException e) {
                 success = false;
                 e.printStackTrace();
             }
