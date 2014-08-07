@@ -11,9 +11,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -62,6 +64,13 @@ public class EventsActivity extends Activity implements OnRefreshListener {
     @ViewById(R.id.swipeRefreshLayout_listView)
     protected SwipeRefreshLayout mListViewContainer;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    
     @AfterViews
     protected void init() {
         mAppContext = (SnSCoreSystem) getApplicationContext();
@@ -301,5 +310,18 @@ public class EventsActivity extends Activity implements OnRefreshListener {
             SnsDatabase.db().endTransaction();
         }
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

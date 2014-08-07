@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
@@ -32,6 +33,7 @@ public class CurrenciesActivity extends Activity {
 
         coinList = SnsDatabase.session().getCoinTypeDao().loadAll();
         mAppContext = (SnSCoreSystem) getApplicationContext();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void onBritishClicked(View v) {
@@ -76,5 +78,18 @@ public class CurrenciesActivity extends Activity {
         });
 
         dialogAlert.create().show();
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -26,7 +26,7 @@
         android:paddingBottom="@dimen/_5dp"
         android:paddingLeft="@dimen/_15dp"
         android:paddingTop="@dimen/_5dp"
-        android:text="mint"
+        android:text="Mint"
         android:textSize="14sp" />
 
     <HorizontalScrollView

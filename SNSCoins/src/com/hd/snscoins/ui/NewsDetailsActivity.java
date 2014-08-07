@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,24 +65,21 @@ public class NewsDetailsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        }
-        else {
-            news = ((SnSCoreSystem) getApplicationContext()).getTransientNews();
-            ((SnSCoreSystem) getApplicationContext()).setTransientNews(null);
+        news = ((SnSCoreSystem) getApplicationContext()).getTransientNews();
+        ((SnSCoreSystem) getApplicationContext()).setTransientNews(null);
 
-            //Initialize lazy loading api.
-            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
-            imageLoader = ImageLoader.getInstance();
-            options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.drawable.img_not_available)
-                    .showImageForEmptyUri(R.drawable.img_not_available)
-                    .showImageOnFail(R.drawable.img_not_available)
-                    .cacheInMemory(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565)
-                    .build();
-        }
+        //Initialize lazy loading api.
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
+        imageLoader = ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.img_not_available)
+                .showImageForEmptyUri(R.drawable.img_not_available)
+                .showImageOnFail(R.drawable.img_not_available)
+                .cacheInMemory(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @AfterViews
@@ -134,5 +132,18 @@ public class NewsDetailsActivity extends Activity {
                 imageLoader.displayImage("file://" + photoPath, imgView, options);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

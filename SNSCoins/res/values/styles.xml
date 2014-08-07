@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -20,6 +20,7 @@
     <style name="btnStyle" parent="android:Widget.Holo.Light.Button">
         <item name="android:background">@drawable/selector_border_gray_on_press_blue_55c2ea</item>
         <item name="android:layout_margin">@dimen/_10dp</item>
+        <item name="android:textColor">@android:color/holo_red_light</item>
     </style>
 
 </resources>

@@ -3,7 +3,6 @@ package com.hd.snscoins.ui;
 
 import java.util.concurrent.ExecutionException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -11,6 +10,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,6 +55,11 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Sets Application to full screen by removing action bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @AfterViews
@@ -62,9 +68,29 @@ public class SplashScreenActivity extends Activity {
             new SyncCallLoader().execute();
         }
         else {
-            Intent intent = new Intent(getApplicationContext(), HomeScreenActivity_.class);
-            startActivity(intent);
-            finish();
+            progressBar.setVisibility(View.GONE);
+            txtText.setVisibility(View.GONE);
+
+            Thread t = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2000);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Intent intent = new Intent(getApplicationContext(), HomeScreenActivity_.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                }
+            });
+            t.start();
         }
     }
 
@@ -206,7 +232,7 @@ public class SplashScreenActivity extends Activity {
                         if (uncSetSubType == null) {
                             uncSetSubType = new CoinSubType(
                                     -1l,
-                                    "UNC Set",
+                                    "UNC / Proof set",
                                     weProduct.getCategory_id());
                             SnsDatabase.session().getCoinSubTypeDao().insert(uncSetSubType);
                         }
@@ -254,4 +280,7 @@ public class SplashScreenActivity extends Activity {
     public void onRetry(View v) {
         new SyncCallLoader().execute();
     }
+
+    @Override
+    public void onBackPressed() {}
 }

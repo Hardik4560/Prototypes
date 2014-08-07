@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -54,6 +55,8 @@ public class CoinsListActivity extends ListActivity {
         mAppContext = ((SnSCoreSystem) getApplicationContext());
         subType = mAppContext.getTransientSubType();
         mAppContext.setTransientSubType(null);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @AfterViews
@@ -243,5 +246,18 @@ public class CoinsListActivity extends ListActivity {
             progressDialog.dismiss();
             adapterCoin.setDataSource(coins);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

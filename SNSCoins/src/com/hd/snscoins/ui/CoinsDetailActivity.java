@@ -9,11 +9,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -27,13 +30,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OptionsItem;
+import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.hardy.logging.Logger;
 import com.hardy.utils.ToastMaker;
@@ -56,6 +59,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
+@OptionsMenu(R.menu.help)
 @EActivity(R.layout.activity_product_detail)
 public class CoinsDetailActivity extends Activity {
 
@@ -94,6 +98,8 @@ public class CoinsDetailActivity extends Activity {
         mCoin = mAppContext.getTransientProduct();
         mAppContext.setTransientProduct(null);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        
         //Initialize lazy loading api.
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
         imageLoader = ImageLoader.getInstance();
@@ -403,5 +409,43 @@ public class CoinsDetailActivity extends Activity {
         //Download from server.
         GetDetailsLoader getDetailsLoader = new GetDetailsLoader();
         getDetailsLoader.execute();
+    }
+
+    @OptionsItem(R.id.action_help)
+    public void onHelp() {
+        String[] options = new String[] {
+                                         "REPUBLIC INDIA COIN",
+                                         "B/M  - Bombay / Mumbai mint",
+                                         "C/K  - Calcutta / Kolkata mint",
+                                         "H    - Hyderabad mint",
+                                         "N    - Noida mint",
+                                         "F    - Foreign mint",
+                                         "",
+                                         "BRITISH INDIA COIN",
+                                         "B : Bombay",
+                                         "C : calcutta",
+                                         "M : madras",
+                                         "L : lahore"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options);
+
+        AlertDialog.Builder dialogAlert = new AlertDialog.Builder(this);
+        dialogAlert.setAdapter(adapter, null);
+        dialogAlert.setPositiveButton("Ok", null);
+
+        dialogAlert.create().show();
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

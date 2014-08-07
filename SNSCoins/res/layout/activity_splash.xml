@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:gravity="center"
+    android:gravity="bottom|center_horizontal"
+    android:background="@drawable/splash"
     android:orientation="vertical" >
 
     <ProgressBar
@@ -12,13 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_20dp" />
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Preparing your data, please wait ..."
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/btnRetry"
@@ -30,5 +23,14 @@
         android:paddingRight="@dimen/_40dp"
         android:text="Retry"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Preparing your data, please wait ..."
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

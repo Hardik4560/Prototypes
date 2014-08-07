@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class BookmarkListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
 
         mAppContext = ((SnSCoreSystem) getApplicationContext());
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @AfterViews
@@ -252,5 +254,18 @@ public class BookmarkListActivity extends ListActivity {
                 empty_view.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
