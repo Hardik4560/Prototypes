@@ -423,9 +423,9 @@ public class CoinsDetailActivity extends Activity {
                                          "",
                                          "BRITISH INDIA COIN",
                                          "B : Bombay",
-                                         "C : calcutta",
-                                         "M : madras",
-                                         "L : lahore"
+                                         "C : Calcutta",
+                                         "M : Madras",
+                                         "L : Lahore"
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options);
 

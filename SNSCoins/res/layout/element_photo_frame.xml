@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rltPhotoFrame"
+        android:layout_width="@dimen/_100dp"
+        android:layout_height="@dimen/_100dp"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_5dp"
+        android:background="@drawable/selector_border_base_color" >
+
+        <ImageView
+            android:id="@+id/imgPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@android:drawable/ic_menu_gallery"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/imgRemove"
+            android:layout_width="@dimen/_40dp"
+            android:layout_height="@dimen/_40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
+            android:scaleType="fitEnd"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="@color/white_77ffffff" />
+
+        <TextView
+            android:id="@+id/txtAddPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_5dp"
+            android:background="@color/black_33000000"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:paddingBottom="@dimen/_3dp"
+            android:paddingTop="@dimen/_3dp"
+            android:text="Add Photo"
+            android:textColor="@color/white_ffffff"
+            android:textStyle="italic" />
+    </RelativeLayout>
+
+</LinearLayout>

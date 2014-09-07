@@ -53,6 +53,11 @@ public class HomeScreenActivity extends Activity {
         startActivity(intent);
     }
 
+    public void onValidationClicked(View v) {
+        Intent intent = new Intent(this, ValidationActivity_.class);
+        startActivity(intent);
+    }
+
     public void onNewsClicked(View v) {
         final List<NewsCategory> newsCategoryList = SnsDatabase.session().getNewsCategoryDao().loadAll();
 

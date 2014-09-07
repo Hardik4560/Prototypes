@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.hardy.logging.Logger;
 import com.hd.snscoins.R;
 import com.hd.snscoins.application.SnSCoreSystem;
 import com.hd.snscoins.core.Events;

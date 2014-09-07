@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Theme color -->
+    <color name="coinapp_color">#c00</color>
+    <color name="base_color">#ae3335</color>
+
+    <!-- Other colors -->
     <color name="blue_55c2ea">#55c2ea</color>
     <color name="blue_1384ac">#1384ac</color>
     <color name="blue_7755c2ea">#7755c2ea</color>
@@ -11,7 +16,8 @@
 
     <!-- White -->
     <color name="white_77ffffff">#77ffffff</color>
-    
+    <color name="white_ffffff">#ffffff</color>
+
     <!-- grays -->
     <color name="gray_333333">#333333</color>
     <color name="gray_777777">#777777</color>
@@ -22,5 +28,6 @@
     <color name="gray_ebebeb">#ebebeb</color>
     <color name="gray_f8f8f8">#f8f8f8</color>
     <color name="black_000000">#000000</color>
+    <color name="black_33000000">#77000000</color>
 
 </resources>

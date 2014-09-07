@@ -1,26 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
+  <style name="AutoCompleteTextViewCoinApp" parent="android:Widget.Holo.Light.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/coinapp_list_selector_holo_light</item>
+	    <item name="android:background">@drawable/coinapp_edit_text_holo_light</item>
+  </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
+  <style name="ButtonCoinApp" parent="android:Widget.Holo.Light.Button">
+	  <item name="android:background">@drawable/coinapp_btn_default_holo_light</item>
+	  <item name="android:textColor">@android:color/white</item>
+  </style>
 
-    <style name="btnStyle" parent="android:Widget.Holo.Light.Button">
-        <item name="android:background">@drawable/selector_border_gray_on_press_blue_55c2ea</item>
-        <item name="android:layout_margin">@dimen/_10dp</item>
-        <item name="android:textColor">@android:color/holo_red_light</item>
-    </style>
+  <style name="ImageButtonCoinApp" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/coinapp_btn_default_holo_light</item>
+  </style>
+
+  <style name="SpinnerCoinApp" parent="android:Widget.Holo.Light.Spinner">
+      <item name="android:background">@drawable/coinapp_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/coinapp_list_selector_holo_light</item>
+  </style>
+
+  <style name="TabCoinApp">
+      <item name="android:gravity">center_horizontal</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+      <item name="android:background">@drawable/coinapp_tab_indicator_holo</item>
+      <item name="android:layout_width">0dip</item>
+      <item name="android:layout_weight">1</item>
+      <item name="android:minWidth">80dip</item>
+  </style>
+
+  <style name="TabTextCoinApp">
+	  <item name="android:textColor">#000000</item>
+      <item name="android:textSize">12sp</item>
+      <item name="android:textStyle">bold</item>
+      <!-- v14 <item name="android:textAllCaps">true</item> -->
+      <item name="android:ellipsize">marquee</item>
+      <item name="android:maxLines">2</item>
+      <item name="android:maxWidth">180dip</item>
+  </style>
+
+  <style name="ProgressBarCoinApp" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/coinapp_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/coinapp_progress_indeterminate_horizontal_holo_light</item>
+  </style>
+
+  <style name="SeekBarCoinApp" parent="android:Widget.Holo.Light.SeekBar">
+      <item name="android:progressDrawable">@drawable/coinapp_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/coinapp_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:thumb">@drawable/coinapp_scrubber_control_selector_holo_light</item>
+  </style>
+
+  <style name="RatingBarCoinApp" parent="android:Widget.Holo.Light.RatingBar">
+      <item name="android:progressDrawable">@drawable/coinapp_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/coinapp_ratingbar_full_holo_light</item>
+  </style>
+
+  <style name="RatingBarBigCoinApp" parent="android:Widget.Holo.Light.RatingBar.Indicator">
+      <item name="android:progressDrawable">@drawable/coinapp_ratingbar_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/coinapp_ratingbar_holo_light</item>
+  </style>
+
+  <style name="RatingBarSmallCoinApp" parent="android:Widget.Holo.Light.RatingBar.Small">
+      <item name="android:progressDrawable">@drawable/coinapp_ratingbar_small_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/coinapp_ratingbar_small_holo_light</item>
+  </style>
+
+  <style name="ToggleCoinApp" parent="android:Widget.Holo.Light.Button.Toggle">
+      <item name="android:background">@drawable/coinapp_btn_toggle_holo_light</item>
+  </style>
 
 </resources>
